@@ -10,5 +10,5 @@
 - Tailwind CSS IntelliSense
 
 
-* Shortcut
+* Shortcut-
 - tsrfce
