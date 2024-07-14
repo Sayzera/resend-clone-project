@@ -12,3 +12,16 @@
 
 * Shortcut
 - tsrfce
+
+* icons
+- https://react-icons.github.io/react-icons/search/#q=item
+
+* TailwindColors
+- https://tailwindcss.com/docs/customizing-colors
+
+
+* TODOS 
+- useEffect [] - https://react.dev/reference/react/useEffect
+- useState  [] - https://react.dev/reference/react/useState
+- layout içerisindeki settings bölümünü ayrı bir komponent olarak ekleme
+- Menünün geri kalan kısmının tamamlanması
