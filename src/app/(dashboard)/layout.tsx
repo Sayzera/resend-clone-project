@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="w-[250px] h-full border-r border-gray-500 p-5 flex flex-shrink-0 flex-col justify-between">
                     {/* Logo */}
                     <Logo />
-
+                    {/** arda */}
                     {/* Menu */}
                     <Menu />
 
