@@ -22,14 +22,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
                 </div>
 
-                <div className="bg-white flex flex-row justify-between">
+                <div className="bg-white flex flex-col w-full">
                     {/* navbar */}
-                    <Navbar />
+                    {/* <Navbar /> */}
                     {/* Content */}
                     <div>
                         {children}
+                      
                     </div>
+                    
+                    
                 </div>
+               
             </div>
         </>
     )
