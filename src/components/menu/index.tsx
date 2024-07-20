@@ -10,7 +10,8 @@ import { CiLock } from "react-icons/ci";
 import { PiArrowsDownUpThin } from "react-icons/pi";
 import { IoSettingsOutline } from "react-icons/io5";
 import axios from 'axios'
-import MenuItem from './menu-item';
+import MenuItem, { Mahmut as Mahmut2 } from './menu-item'; // export default function ve export function isimlendirme
+import JsonItem from './json-item';
 
 
 
@@ -29,14 +30,53 @@ const menuItems = [
         id: 3,
         icon: IoPeople,
         name: 'Audiences'
+    },
+    {
+        id: 4,
+        icon: TbWorld,
+        name: 'Domains'
+    },
+    {
+        id: 5,
+        icon: IoLogoBuffer,
+        name: 'Logs'
+    },
+    {
+        id: 6,
+        icon: CiLock,
+        name: 'API Keys'
+    },
+    {
+        id: 7,
+        icon: PiArrowsDownUpThin,
+        name: 'Webhooks'
+    },
+    {
+        id: 8,
+        icon: IoSettingsOutline,
+        name: 'Settings'
     }
 ]
 
 
 type Props = {}
 
-function Menu({ }: Props) {
-    const [data,setData] = useState();
+function Menu({ }: Props) { // gelen verideki objenin tipleri tanimlanir (array objesi)
+    const [first10, setData] = useState<
+    {
+        userId:number
+        id:number
+        title:string
+        body:string
+    } []
+    >([]);
+
+    // {
+    //     "userId": 1,
+    //     "id": 1,
+    //     "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+    //     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+    // }
 
     //     // let counter = 0;
     //     const [counter, setCounter] = useState(0) 
@@ -59,19 +99,21 @@ function Menu({ }: Props) {
     //     //     console.log(data.data, 'XXXXXx')
     //     // })
 
-        useEffect(() => {
-            getAllData();
-        }, [])
+    useEffect(() => {
+        getAllData();
+    }, [])
 
-       async function getAllData() {
-        const {data} = await axios.get('https://jsonplaceholder.typicode.com/posts');
-        setData(data);
+    async function getAllData() {
+        const { data } = await axios.get('https://jsonplaceholder.typicode.com/posts');
+        //console.log(data, 'dataa')
+        const first10 = data.slice(0, 2);
+        setData(first10);
 
     }
 
 
 
-    console.log(data, 'data')
+    console.log(first10, 'data')
 
 
 
@@ -91,6 +133,7 @@ function Menu({ }: Props) {
                 ))
             }
 
+            <Mahmut2 />
 
 
 
@@ -127,6 +170,19 @@ function Menu({ }: Props) {
                 <IoSettingsOutline className="text-gray-300 w-5 h-5" />
                 <span className="text-gray-300">Settings</span>
             </div> */}
+
+            {
+                first10?.map((item)=>{
+                    return (
+                        <JsonItem
+                id={item.id}
+                body={item.body}
+                title={item.title}
+                key={item.id}
+            />
+                    )
+                })
+            }
 
         </nav>
     )
