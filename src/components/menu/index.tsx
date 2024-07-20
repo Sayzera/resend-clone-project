@@ -1,6 +1,6 @@
 'use client'
-import React, { useEffect, useState } from 'react'
-// menü
+import React from 'react'
+
 import { CiMail } from "react-icons/ci";
 import { GrDownload } from "react-icons/gr";
 import { IoPeople } from "react-icons/io5";
@@ -9,117 +9,63 @@ import { IoLogoBuffer } from "react-icons/io5";
 import { CiLock } from "react-icons/ci";
 import { PiArrowsDownUpThin } from "react-icons/pi";
 import { IoSettingsOutline } from "react-icons/io5";
-import axios from 'axios'
-import MenuItem, { Mahmut as Mahmut2 } from './menu-item'; // export default function ve export function isimlendirme
-import JsonItem from './json-item';
-
+import MenuItem from './menu-item'; // export default function ve export function isimlendirme
 
 
 const menuItems = [
     {
         id: 1,
         icon: CiMail,
-        name: 'Emails'
+        name: 'Emails',
+        path: '/emails'
     },
     {
         id: 2,
         icon: GrDownload,
-        name: 'Broadcasts'
+        name: 'Broadcasts',
+        path: '/broadcasts'
     },
     {
         id: 3,
         icon: IoPeople,
-        name: 'Audiences'
+        name: 'Audiences',
+        path: '/auidences'
     },
     {
         id: 4,
         icon: TbWorld,
-        name: 'Domains'
+        name: 'Domains',
+        path: '/auidences'
     },
     {
         id: 5,
         icon: IoLogoBuffer,
-        name: 'Logs'
+        name: 'Logs',
+        path: '/auidences'
     },
     {
         id: 6,
         icon: CiLock,
-        name: 'API Keys'
+        name: 'API Keys',
+        path: '/auidences'
     },
     {
         id: 7,
         icon: PiArrowsDownUpThin,
-        name: 'Webhooks'
+        name: 'Webhooks',
+        path: '/auidences'
     },
     {
         id: 8,
         icon: IoSettingsOutline,
-        name: 'Settings'
+        name: 'Settings',
+        path: '/auidences'
     }
 ]
-
 
 type Props = {}
 
 function Menu({ }: Props) { // gelen verideki objenin tipleri tanimlanir (array objesi)
-    const [first10, setData] = useState<
-    {
-        userId:number
-        id:number
-        title:string
-        body:string
-    } []
-    >([]);
-
-    // {
-    //     "userId": 1,
-    //     "id": 1,
-    //     "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    //     "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-    // }
-
-    //     // let counter = 0;
-    //     const [counter, setCounter] = useState(0) 
-    //     const onClick = () => {
-    //         setCounter(counter + 1)
-
-    //         console.log(counter)
-    //     }
-
-    //     useEffect(() => {
-    //         console.log(1)
-    //         if(counter == 4) {
-    //             alert('İşlem tamamlandı')
-    //         }
-
-    //     }, [counter])
-
-
-    //     // axios.get('https://jsonplaceholder.typicode.com/posts').then((data) => {
-    //     //     console.log(data.data, 'XXXXXx')
-    //     // })
-
-    useEffect(() => {
-        getAllData();
-    }, [])
-
-    async function getAllData() {
-        const { data } = await axios.get('https://jsonplaceholder.typicode.com/posts');
-        //console.log(data, 'dataa')
-        const first10 = data.slice(0, 2);
-        setData(first10);
-
-    }
-
-
-
-    console.log(first10, 'data')
-
-
-
-
-
-    // TODO: Loop
     return (
         <nav className="mt-6 flex-1">
             {
@@ -128,60 +74,11 @@ function Menu({ }: Props) { // gelen verideki objenin tipleri tanimlanir (array 
                         id={item.id}
                         name={item.name}
                         Icon={item.icon}
+                        menuPath={item.path}
+
                         key={item.id}
                     />
                 ))
-            }
-
-            <Mahmut2 />
-
-
-
-            {/* <div className="flex items-center space-x-2 p-2 hover:bg-gray-600 hover:rounded-lg cursor-pointer transition-all delay-150"
-            >
-                <CiMail className="text-gray-300 w-5 h-5" />
-                <span className="text-gray-300">Emails</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 hover:bg-gray-600 hover:rounded-lg cursor-pointer transition-all delay-150">
-                <GrDownload className="text-gray-300 w-5 h-5" />
-                <span className="text-gray-300">Broadcasts</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 hover:bg-gray-600 hover:rounded-lg cursor-pointer transition-all delay-150">
-                <IoPeople className="text-gray-300 w-5 h-5" />
-                <span className="text-gray-300">Audiences</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 hover:bg-gray-600 hover:rounded-lg cursor-pointer transition-all delay-150">
-                <TbWorld className="text-gray-300 w-5 h-5" />
-                <span className="text-gray-300">Domains</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 hover:bg-gray-600 hover:rounded-lg cursor-pointer transition-all delay-150">
-                <IoLogoBuffer className="text-gray-300 w-5 h-5" />
-                <span className="text-gray-300">Logs</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 hover:bg-gray-600 hover:rounded-lg cursor-pointer transition-all delay-150">
-                <CiLock className="text-gray-300 w-5 h-5" />
-                <span className="text-gray-300">API Keys</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 hover:bg-gray-600 hover:rounded-lg cursor-pointer transition-all delay-150">
-                <PiArrowsDownUpThin className="text-gray-300 w-5 h-5" />
-                <span className="text-gray-300">Webhooks</span>
-            </div>
-            <div className="flex items-center space-x-2 p-2 hover:bg-gray-600 hover:rounded-lg cursor-pointer transition-all delay-150">
-                <IoSettingsOutline className="text-gray-300 w-5 h-5" />
-                <span className="text-gray-300">Settings</span>
-            </div> */}
-
-            {
-                first10?.map((item)=>{
-                    return (
-                        <JsonItem
-                id={item.id}
-                body={item.body}
-                title={item.title}
-                key={item.id}
-            />
-                    )
-                })
             }
 
         </nav>

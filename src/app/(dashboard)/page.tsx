@@ -2,7 +2,10 @@
 export default function Home() {
 
      return (
-        <div>Home Page!</div>
+
+        <div className="p-5">
+         Home
+        </div>
 
      )
 
