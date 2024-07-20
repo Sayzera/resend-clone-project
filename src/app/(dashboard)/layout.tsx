@@ -1,6 +1,5 @@
 import Logo from "@/components/logo";
 import Menu from "@/components/menu";
-import Navbar from "@/components/navbar";
 import Settings from "@/components/settings";
 
 type DashboardLayoutProps = {

@@ -23,4 +23,6 @@ export default function MenuItem({
   )
 }
 
-
+export function Mahmut() {
+  return <div className='bg-white'>Merhaba</div>
+}

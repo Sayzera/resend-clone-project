@@ -23,5 +23,3 @@
 * TODOS 
 - useEffect [] - https://react.dev/reference/react/useEffect
 - useState  [] - https://react.dev/reference/react/useState
-- layout içerisindeki settings bölümünü ayrı bir komponent olarak ekleme
-- Menünün geri kalan kısmının tamamlanması
