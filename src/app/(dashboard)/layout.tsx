@@ -27,7 +27,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     {/* Content */}
                     <div>
                         {children}
-                      
                     </div>
                     
                     
