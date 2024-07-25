@@ -29,37 +29,37 @@ const menuItems = [
         id: 3,
         icon: IoPeople,
         name: 'Audiences',
-        path: '/auidences'
+        path: '/audiences'
     },
     {
         id: 4,
         icon: TbWorld,
         name: 'Domains',
-        path: '/auidences'
+        path: '/domains'
     },
     {
         id: 5,
         icon: IoLogoBuffer,
         name: 'Logs',
-        path: '/auidences'
+        path: '/logs'
     },
     {
         id: 6,
         icon: CiLock,
         name: 'API Keys',
-        path: '/auidences'
+        path: '/apikeys'
     },
     {
         id: 7,
         icon: PiArrowsDownUpThin,
         name: 'Webhooks',
-        path: '/auidences'
+        path: '/webhooks'
     },
     {
         id: 8,
         icon: IoSettingsOutline,
         name: 'Settings',
-        path: '/auidences'
+        path: '/settings'
     }
 ]
 
