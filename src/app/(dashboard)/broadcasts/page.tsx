@@ -2,8 +2,10 @@ import React from 'react'
 
 type Props = {}
 
-export default function Page({}: Props) {
+function Broadcasts({}: Props) {
   return (
     <div>Broadcasts</div>
   )
 }
+
+export default Broadcasts

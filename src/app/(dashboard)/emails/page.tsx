@@ -22,9 +22,6 @@ export default function Page({ }: Props) {
 
   return (
     <Loader isLoading={isLoading}>
-      Emails
-
-
       <CustomInput />
     </Loader>
   )
