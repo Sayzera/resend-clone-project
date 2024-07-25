@@ -3,13 +3,16 @@ import { IoMdClose } from "react-icons/io";
 
 type Props = {
     label?: string
-    type?: 'text' | 'email' | 'password' | 'number' | 'date' | 'file' | 'radio' | 'checkbox' | 'textarea'
+    type?: 'text' | 'email' | 'password' | 'number' | 'date' | 'file' | 'radio' | 'checkbox' | 'textarea' | 'button'
     id?: string
     name?: string
     value?: string
     rows?: number
     cols?: number
     error?: string
+    btnType?: 'button' | 'submit' | 'reset'
+    onChange?: (e:React.FormEvent<HTMLInputElement>) => void
+    
 }
 
 function Input({
@@ -20,13 +23,18 @@ function Input({
     value,
     rows,
     cols,
-    error
+    error,
+    btnType,
+    onChange
 }: Props) {
+
     return (
         <div className='my-2'>
+
             {type === 'radio' || type === 'checkbox' ? (
                 <>
                     <input
+                        onChange={onChange}
                         className={`mr-2 ${error ? 'border border-red-500' : ''}`}
                         type={type}
                         id={id}
@@ -48,19 +56,25 @@ function Input({
                         cols={cols}
                     />
                 </>
-            ) : (
-                <>
-                    <span className='font-bold'>{label}</span>
-                    <input
-                        className={`p-3 bg-gray-100 rounded-lg w-full mt-2 focus:outline-none 
-                            ${error ? 'border border-red-500' : ''}`}
-                        type={type}
-                        id={id}
-                        name={name}
-                        value={value}
-                    />
-                </>
-            )}
+            ) : type === 'text' ? (
+                (
+                    <>
+                        <span className='font-bold'>{label}</span>
+                        <input
+                            className={`p-3 bg-gray-100 rounded-lg w-full mt-2 focus:outline-none 
+                                ${error ? 'border border-red-500' : ''}`}
+                            type={type}
+                            id={id}
+                            name={name}
+                            value={value}
+                        />
+                    </>
+                )
+            ) : type === 'button' ? (
+                <button type={btnType}>{label}</button>
+            ): null
+            
+            }
             {error && (
                 <div className='relative'>
                     <p className='text-sm text-red-500'>{error}</p>

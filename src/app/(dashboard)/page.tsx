@@ -1,3 +1,4 @@
+import Test2 from "@/components/css/test";
 
 export default function Home() {
 
@@ -5,6 +6,7 @@ export default function Home() {
 
         <div className="p-5">
          Home
+            
         </div>
 
      )

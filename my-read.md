@@ -23,3 +23,7 @@
 * TODOS 
 - useEffect [] - https://react.dev/reference/react/useEffect
 - useState  [] - https://react.dev/reference/react/useState
+
+
+* Form State
+- https://www.w3schools.com/react/react_forms.asp
