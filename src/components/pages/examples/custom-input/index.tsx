@@ -24,7 +24,7 @@ export default function CustomInput({ }: Props) {
     }
 
     const onHandlecheckboxOnchange = (e: React.FormEvent<HTMLInputElement>) => {
-        let data =  e.currentTarget.value
+        let data =  e.currentTarget.value //sor
 
        // herşeyi data içine pushla üzerine ekle
         
@@ -42,6 +42,7 @@ export default function CustomInput({ }: Props) {
                 data: [...prev.data, data]
             }
        })
+       console.log(checkboxData); //sor
        
     }
 
@@ -84,10 +85,10 @@ export default function CustomInput({ }: Props) {
                 <Input label='Outlook' type='radio' id='radio2' name='emailPreference' value='outlook_preferred' />
                 <Input label='Yahoo Mail' type='radio' id='radio3' name='emailPreference' value='yahoo_preferred' />
                 <p>Please ask your questions from the text field below.</p>
-                <Input label='Gmail' type='textarea'
+                <Input label='Questions' type='textarea'
                     rows={5}
-                    id='radio1' name='emailPreference' value='gmail_preferred' />
-                <Input type='button' label='Gönder' btnType='submit' />
+                    id='radio1' name='emailPreference' />
+                <Input type='button' label='Submit' btnType='submit' />
             </form>
 
         </div>
