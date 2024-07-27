@@ -22,7 +22,7 @@ export default function Page({ }: Props) {
 
   return (
     <Loader isLoading={isLoading}>
-      <CustomInput />
+    <div>home page</div>
     </Loader>
   )
 }

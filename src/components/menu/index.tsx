@@ -10,6 +10,8 @@ import { CiLock } from "react-icons/ci";
 import { PiArrowsDownUpThin } from "react-icons/pi";
 import { IoSettingsOutline } from "react-icons/io5";
 import MenuItem from './menu-item'; // export default function ve export function isimlendirme
+import Link from 'next/link';
+import MenuSubItem from './menu-sub-item';
 
 
 const menuItems = [
@@ -80,6 +82,12 @@ function Menu({ }: Props) { // gelen verideki objenin tipleri tanimlanir (array 
                     />
                 ))
             }
+
+           <MenuSubItem
+             isActiveMenuItem={false}
+             Icon={IoSettingsOutline}
+             name='Users'
+           />
 
         </nav>
     )
