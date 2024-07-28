@@ -2,6 +2,15 @@
 
 import Loader from "@/components/loader";
 import { useEffect, useState } from "react";
+import Cookies from 'js-cookie'
+
+export const getRegisterUserFromCookies = (name:string) => {
+   let data = Cookies.get(name) 
+   if(data) {
+      return  JSON.parse(data)
+   }
+   return [];
+}
 
 export default function UserRegister() {
    const [name, setName] = useState<string>('');
@@ -16,6 +25,7 @@ export default function UserRegister() {
    const [nameErrorMessage, nameSetErrorMessage] = useState<string>('');
    const [surnameErrorMessage, surnameSetErrorMessage] = useState<string>('');
    const [emailErrorMessage, emailSetErrorMessage] = useState<string>('');
+
 
 
 
@@ -38,8 +48,31 @@ export default function UserRegister() {
       e.preventDefault();
       setSubmitted(true);
 
-      console.log('click')
+      // register user  
+      addRegisterUserCookies();
+
+
    }
+
+   const addRegisterUserCookies = () => {
+      // cookideki verileri getir
+      let data = getRegisterUserFromCookies('users'); // 7 
+
+      data.push({
+        name:name,
+        surname:surname,
+        age:age,
+        email:email,
+      }),
+
+      // TODO: Aynı veriden birden fazla eklenemez
+
+      Cookies.set('users', JSON.stringify(data))
+
+    
+   }
+
+
 
    // name validation
    useEffect(() => {
@@ -51,6 +84,8 @@ export default function UserRegister() {
          } else {
             nameSetErrorMessage('')
          }
+      } else {
+         nameSetErrorMessage('')
       }
    },[name])
 
@@ -131,6 +166,7 @@ export default function UserRegister() {
                />
                <div>
                   {nameErrorMessage}
+                  {/* <ErrorMessage message={nameErrorMessage} /> */}
                </div>
             </div>
             <div className="mb-4">
@@ -201,6 +237,7 @@ export default function UserRegister() {
                <div>Password: {'*'.repeat(password.length)}</div>
             </div>
          )}
+
       </div>
     </Loader>
    );

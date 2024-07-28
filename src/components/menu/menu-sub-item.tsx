@@ -25,7 +25,7 @@ export default function MenuSubItem({
 }: Props) {
     const router = useRouter()
 
-    
+
     return (
         <DropdownMenu >
             <DropdownMenuTrigger
@@ -39,10 +39,18 @@ export default function MenuSubItem({
             </DropdownMenuTrigger>
             <DropdownMenuContent className=" w-[200px] bg-[#05050a] border-gray-500 ">
                 <DropdownMenuItem
-                onClick={() => {
-                    router.push('/users/register')
-                }}  
-                className="text-gray-300">Register</DropdownMenuItem>
+                    onClick={() => {
+                        router.push('/users/register')
+                    }}
+                    className="text-gray-300">Register</DropdownMenuItem>
+
+
+
+                <DropdownMenuItem
+                    onClick={() => {
+                        router.push('/users/list')
+                    }}
+                    className="text-gray-300">User List</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )

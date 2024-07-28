@@ -27,3 +27,9 @@
 
 * Form State
 - https://www.w3schools.com/react/react_forms.asp
+
+* js-cookie
+- https://www.npmjs.com/package/js-cookie
+
+* shadcn components
+- table -> https://ui.shadcn.com/docs/components/table
