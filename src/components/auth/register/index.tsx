@@ -17,14 +17,21 @@ export default function UserRegister() {
    const [surnameErrorMessage, surnameSetErrorMessage] = useState<string>('');
    const [emailErrorMessage, emailSetErrorMessage] = useState<string>('');
 
-   useEffect(() => {
-     setIsLoading(true)
-     let clearSettimeout = setTimeout(() => {
-       setIsLoading(false)
-     }, 2000);
+
+
+   const birkezDinle = () => {
+      setIsLoading(true)
+    
+      let clearSettimeout = setTimeout(() => {
+        setIsLoading(false)
+      }, 2000);
+      
  
-     return () => clearTimeout(clearSettimeout)
-   }, []) // sor
+      return () => clearTimeout(clearSettimeout)
+   }
+
+   useEffect(birkezDinle, []) // sor
+
 
 
    const handleSubmit = (e: React.FormEvent) => {
