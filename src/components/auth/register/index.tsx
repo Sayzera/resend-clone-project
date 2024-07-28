@@ -10,14 +10,12 @@ export default function UserRegister() {
    const [email, setEmail] = useState<string>('');
    const [password, setPassword] = useState<string>('');
    const [submitted, setSubmitted] = useState<boolean>(false);
-
-   const [isLoading, setIsLoading] = useState<boolean>(false)
-
-
+   const [isLoading, setIsLoading] = useState<boolean>(false);
    const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
    const [ageErrorMessage, ageSetErrorMessage] = useState<string>('');
-
-
+   const [nameErrorMessage, nameSetErrorMessage] = useState<string>('');
+   const [surnameErrorMessage, surnameSetErrorMessage] = useState<string>('');
+   const [emailErrorMessage, emailSetErrorMessage] = useState<string>('');
 
    useEffect(() => {
      setIsLoading(true)
@@ -26,31 +24,41 @@ export default function UserRegister() {
      }, 2000);
  
      return () => clearTimeout(clearSettimeout)
-   }, [])
+   }, []) // sor
 
 
    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-      // setSubmitted(true);
+      setSubmitted(true);
 
       console.log('click')
-
-
-
-      if(password.length > 16 || password.length < 6  ) {
-         setPasswordErrorMessage('Minimum 6, maksimum 16 karekter girmelisiniz')
-      }
-
-      // email
-
-      // age 
-
-      // surname
-
-      // name 
-
    }
 
+   // name validation
+   useEffect(() => {
+      if(name.length > 0) {
+         if(name.length < 2) {
+            nameSetErrorMessage('Minimum 2 karakter girmelisiniz')
+         } else if (name.length > 50) {
+            nameSetErrorMessage('Maksimum 50 karakter girebilirsiniz')
+         } else {
+            nameSetErrorMessage('')
+         }
+      }
+   },[name])
+
+   // surname validation
+   useEffect(() => {
+      if(surname.length > 0) {
+         if(surname.length < 2) {
+            surnameSetErrorMessage('Minimum 2 karakter girmelisiniz')
+         } else if (surname.length > 50) {
+            surnameSetErrorMessage('Maksimum 50 karakter girebilirsiniz')
+         } else {
+            surnameSetErrorMessage('')
+         }
+      }
+   },[surname])
 
    // password validation
    useEffect(() => {
@@ -58,39 +66,47 @@ export default function UserRegister() {
          if(password.length < 6) {
             setPasswordErrorMessage('Minimum 6 değer girmelisiniz')
          } else if(password.length > 16) {
-            setPasswordErrorMessage('Maksimum 16 karekter girebilirsiniz')
+            setPasswordErrorMessage('Maksimum 16 karakter girebilirsiniz')
          } else {
             setPasswordErrorMessage('')
          }
       }
- 
    },[password])
 
-
-   // age validataion
+   // age validation
    useEffect(() => {
-      console.log(Number(age))
-      if(age.length >0  && Number(age) <= 16) {
-         ageSetErrorMessage('16 yaşından büyük olmalısınız')
+      if(age.length > 0  && Number(age) < 18) {
+         ageSetErrorMessage('18 yaşından büyük olmalısınız')
       } else {
          ageSetErrorMessage('')
       }
    }, [age])
 
-   // sezerr@gmail.com
-
+   // email validation
    useEffect(() => {
       let result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(email)
       if(!result) {
-         console.log('resutl', result)
+         emailSetErrorMessage('Hatali')
       } else {
-         console.log('doğru')
+         emailSetErrorMessage('')
       }
    }, [email])
 
-
-
-   // false = '' | false | null | undefined |  0
+   // Form submission validation
+   const isFormValid = () => {
+      return (
+         !nameErrorMessage &&
+         !surnameErrorMessage &&
+         !ageErrorMessage &&
+         !emailErrorMessage &&
+         !passwordErrorMessage &&
+         name.length > 0 &&
+         surname.length > 0 &&
+         age.length > 0 &&
+         email.length > 0 &&
+         password.length > 0
+      );
+   };
 
    return (
     <Loader isLoading={isLoading}>
@@ -106,6 +122,9 @@ export default function UserRegister() {
                   disabled={submitted}
                   className="border p-2 w-full"
                />
+               <div>
+                  {nameErrorMessage}
+               </div>
             </div>
             <div className="mb-4">
                <label className="block">Surname:</label>
@@ -116,6 +135,9 @@ export default function UserRegister() {
                   onChange={(e) => setSurname(e.target.value)} 
                   className="border p-2 w-full"
                />
+               <div>
+                  {surnameErrorMessage}
+               </div>
             </div>
             <div className="mb-4">
                <label className="block">Age:</label>
@@ -139,6 +161,9 @@ export default function UserRegister() {
                   onChange={(e) => setEmail(e.target.value)} 
                   className="border p-2 w-full"
                />
+                <div>
+                  {emailErrorMessage}
+               </div>
             </div>
             <div className="mb-4">
                <label className="block">Password:</label>
@@ -149,17 +174,12 @@ export default function UserRegister() {
                   onChange={(e) => setPassword(e.target.value)} 
                   className="border p-2 w-full"
                />
-
                <div>
                   {passwordErrorMessage}
                </div>
             </div>
             <div />
-            <button disabled={
-               passwordErrorMessage || 
-               ageErrorMessage 
-               ? true : false 
-            }  type="button" onClick={handleSubmit} className="bg-blue-500 text-white p-2 rounded">
+            <button disabled={!isFormValid()} type="submit" className="bg-blue-500 text-white p-2 rounded">
                Register
             </button>
          </form>
