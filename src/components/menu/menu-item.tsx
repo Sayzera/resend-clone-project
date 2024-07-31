@@ -10,7 +10,6 @@ type Props = {
   name: string
   Icon: IconType
   menuPath: string
-
 }
 
 export default function MenuItem({
@@ -22,7 +21,6 @@ export default function MenuItem({
 
   const pathname = usePathname();
   const isActiveMenuItem = !!pathname && pathname == menuPath;
-
 
   return (
     <Link href={menuPath}>

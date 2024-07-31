@@ -3,15 +3,26 @@ import {
     TableCell,
     TableRow,
 } from "@/components/ui/table"
-type Props = {}
 
-export default function TableItem({ }: Props) {
+type UserItem = {
+    name: string,
+    surname: string,
+    age: string,
+    email: string
+}
+
+type Props = {
+    user: UserItem
+}
+
+export default function TableItem({ user }: Props) {
+    const { name, surname, age, email } = user
     return (
         <TableRow>
-            <TableCell>Paid</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Paid</TableCell>
+            <TableCell>{name}</TableCell>
+            <TableCell>{surname}</TableCell>
+            <TableCell>{age}</TableCell>
+            <TableCell>{email}</TableCell>
         </TableRow>
     )
 }

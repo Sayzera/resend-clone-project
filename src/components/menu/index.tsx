@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-
 import { CiMail } from "react-icons/ci";
 import { GrDownload } from "react-icons/gr";
 import { IoPeople } from "react-icons/io5";
@@ -9,10 +8,8 @@ import { IoLogoBuffer } from "react-icons/io5";
 import { CiLock } from "react-icons/ci";
 import { PiArrowsDownUpThin } from "react-icons/pi";
 import { IoSettingsOutline } from "react-icons/io5";
-import MenuItem from './menu-item'; // export default function ve export function isimlendirme
-import Link from 'next/link';
+import MenuItem from './menu-item';
 import MenuSubItem from './menu-sub-item';
-
 
 const menuItems = [
     {
@@ -77,7 +74,6 @@ function Menu({ }: Props) { // gelen verideki objenin tipleri tanimlanir (array 
                         name={item.name}
                         Icon={item.icon}
                         menuPath={item.path}
-
                         key={item.id}
                     />
                 ))

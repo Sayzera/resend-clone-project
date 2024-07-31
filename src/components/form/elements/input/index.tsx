@@ -12,9 +12,7 @@ type Props = {
     error?: string
     btnType?: 'button' | 'submit' | 'reset'
     onChange?: (e:React.FormEvent<HTMLInputElement>) => void
-    
 }
-
 
 function Input({
     label,

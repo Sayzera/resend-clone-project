@@ -3,8 +3,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -13,7 +11,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -23,16 +20,23 @@ import { getRegisterUserFromCookies } from "@/components/auth/register"
 
 type Props = {}
 
-interface UserItem  {
-  name:string;
-  surname:string;
-  age:number | string;
-  email: string;
-}
-
 export default function UserList({ }: Props) {
   const users = getRegisterUserFromCookies('users')
-  console.log
+
+  function checkDuplicateEmail(users) {
+    const emailSet = new Set<string>();
+    const uniqueUsers = [];
+    
+    for (const user of users) {
+      if (!emailSet.has(user.email)) {
+        emailSet.add(user.email);
+        uniqueUsers.push(user);
+      }
+    }
+    return uniqueUsers;
+  }
+
+  const uniqueUsers = checkDuplicateEmail(users);
 
   return (
     <div>
@@ -51,24 +55,16 @@ export default function UserList({ }: Props) {
                 <TableHead className="w-[100px]" >Surname</TableHead>
                 <TableHead className="w-[100px]">Age</TableHead>
                 <TableHead className="w-[150px]">Email</TableHead>
-              
               </TableRow>
             </TableHeader>
             <TableBody>
-            {
-              users?.map((user:UserItem) => (
-                <TableItem  />
-              ))
-            }
-            
-            
-
+              {uniqueUsers?.map((user) => (
+                <TableItem user = {user} />
+              ))}
             </TableBody>
           </Table>
         </CardContent>
-
       </Card>
-
     </div>
   )
 }
