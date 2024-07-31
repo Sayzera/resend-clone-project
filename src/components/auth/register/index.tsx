@@ -3,11 +3,12 @@
 import Loader from "@/components/loader";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
+import ErrorMessage from "./error-message";
 
 export const getRegisterUserFromCookies = (name:string) => {
    let data = Cookies.get(name) 
    if(data) {
-      return  JSON.parse(data)
+      return JSON.parse(data)
    }
    return [];
 }
@@ -25,9 +26,13 @@ export default function UserRegister() {
    const [nameErrorMessage, nameSetErrorMessage] = useState<string>('');
    const [surnameErrorMessage, surnameSetErrorMessage] = useState<string>('');
    const [emailErrorMessage, emailSetErrorMessage] = useState<string>('');
-
-
-
+   const [allInputFields, setAllInputFields] = useState({
+      name: '',
+      surname: '',
+      age: '',
+      email: '',
+      password: ''
+  });
 
    const birkezDinle = () => {
       setIsLoading(true)
@@ -35,28 +40,29 @@ export default function UserRegister() {
       let clearSettimeout = setTimeout(() => {
         setIsLoading(false)
       }, 2000);
-      
  
       return () => clearTimeout(clearSettimeout)
    }
 
-   useEffect(birkezDinle, []) // sor
-
-
+   useEffect(birkezDinle, [])
 
    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
       setSubmitted(true);
-
+      setAllInputFields({
+         name,
+         surname,
+         age,
+         email,
+         password
+      });
       // register user  
       addRegisterUserCookies();
-
-
    }
 
    const addRegisterUserCookies = () => {
       // cookideki verileri getir
-      let data = getRegisterUserFromCookies('users'); // 7 
+      let data = getRegisterUserFromCookies('users');
 
       data.push({
         name:name,
@@ -65,14 +71,10 @@ export default function UserRegister() {
         email:email,
       }),
 
-      // TODO: Aynı veriden birden fazla eklenemez
+      // PROMISES ve parametresi olan fonksiyonlari parametresiz cagirma kismini tekrardan sor
 
       Cookies.set('users', JSON.stringify(data))
-
-    
    }
-
-
 
    // name validation
    useEffect(() => {
@@ -99,6 +101,8 @@ export default function UserRegister() {
          } else {
             surnameSetErrorMessage('')
          }
+      } else {
+         surnameSetErrorMessage('')
       }
    },[surname])
 
@@ -127,14 +131,14 @@ export default function UserRegister() {
    // email validation
    useEffect(() => {
       let result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(email)
-      if(!result) {
+      if(!result && email.length > 0) {
          emailSetErrorMessage('Hatali')
       } else {
          emailSetErrorMessage('')
       }
    }, [email])
 
-   // Form submission validation
+   // form submission validation
    const isFormValid = () => {
       return (
          !nameErrorMessage &&
@@ -165,8 +169,7 @@ export default function UserRegister() {
                   className="border p-2 w-full"
                />
                <div>
-                  {nameErrorMessage}
-                  {/* <ErrorMessage message={nameErrorMessage} /> */}
+                  {<ErrorMessage message={nameErrorMessage} />}
                </div>
             </div>
             <div className="mb-4">
@@ -179,7 +182,7 @@ export default function UserRegister() {
                   className="border p-2 w-full"
                />
                <div>
-                  {surnameErrorMessage}
+               {<ErrorMessage message={surnameErrorMessage} />}
                </div>
             </div>
             <div className="mb-4">
@@ -192,7 +195,7 @@ export default function UserRegister() {
                   className="border p-2 w-full"
                />
                 <div>
-                  {ageErrorMessage}
+                {<ErrorMessage message={ageErrorMessage} />}
                </div>
             </div>
             <div className="mb-4">
@@ -205,7 +208,7 @@ export default function UserRegister() {
                   className="border p-2 w-full"
                />
                 <div>
-                  {emailErrorMessage}
+                {<ErrorMessage message={emailErrorMessage} />}
                </div>
             </div>
             <div className="mb-4">
@@ -218,7 +221,7 @@ export default function UserRegister() {
                   className="border p-2 w-full"
                />
                <div>
-                  {passwordErrorMessage}
+               {<ErrorMessage message={passwordErrorMessage} />}
                </div>
             </div>
             <div />
@@ -230,15 +233,15 @@ export default function UserRegister() {
          {submitted && (
             <div className="mt-5">
                <h2>Submitted Data:</h2>
-               <div>Name: {name}</div>
-               <div>Surname: {surname}</div>
-               <div>Age: {age}</div>
-               <div>Email: {email}</div>
-               <div>Password: {'*'.repeat(password.length)}</div>
+               <div>Name: {allInputFields.name}</div>
+               <div>Surname: {allInputFields.surname}</div>
+               <div>Age: {allInputFields.age}</div>
+               <div>Email: {allInputFields.email}</div>
+               <div>Password: {'*'.repeat(allInputFields.password.length)}</div>
             </div>
          )}
 
       </div>
-    </Loader>
+    </Loader> // SOR Loader icindeki children kavrami ve neden input fieldlar loader component in icinde yazildi
    );
 }

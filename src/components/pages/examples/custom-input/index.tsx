@@ -15,40 +15,29 @@ export default function CustomInput({ }: Props) {
         errorMessage: ''
     });
 
-
     const onHandleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-
-
-
     }
 
     const onHandlecheckboxOnchange = (e: React.FormEvent<HTMLInputElement>) => {
-        let data =  e.currentTarget.value //sor
+        let data =  e.currentTarget.value
 
        // herşeyi data içine pushla üzerine ekle
-        
-       setCheckboxData((prev) => {
 
+       setCheckboxData((prev) => {
             if( prev.data?.includes(data)) {
                 return {
                     ...prev,
                     data: prev.data?.filter((item) => item != data )
                 }
             }
-            
              return {
                 ...prev,
                 data: [...prev.data, data]
             }
        })
-       console.log(checkboxData); //sor
-       
+       console.log(checkboxData);
     }
-
-
-
-
 
     return (
         <div className='p-5'>
@@ -63,8 +52,6 @@ export default function CustomInput({ }: Props) {
                 <Input label='Email' type='email' error='Email must be filled-in.' />
                 <Input label='Password' type='password' />
                 <p>Which email platforms do you currently use?</p>
-
-
                 <Input label='Gmail'
                     onChange={(e) => onHandlecheckboxOnchange(e)}
                     type='checkbox' id='checkbox1' name='experienceCheck' value='gmail' />
@@ -77,8 +64,6 @@ export default function CustomInput({ }: Props) {
                 <Input
                     onChange={(e) => onHandlecheckboxOnchange(e)}
                     label='Other' type='checkbox' id='checkbox4' name='experienceCheck' value='other' error='hata' />
-
-
                 <p>Please select your favorite email platform.</p>
                 <Input label='Gmail' type='radio' id='radio1' name='emailPreference' value='gmail_preferred' />
 
@@ -94,6 +79,3 @@ export default function CustomInput({ }: Props) {
         </div>
     )
 }
-
-
-
