@@ -58,23 +58,38 @@ export default function UserRegister() {
       });
       // register user  
       addRegisterUserCookies();
+
+
+      //    !nameErrorMessage &&
+      //    !surnameErrorMessage &&
+      //    !ageErrorMessage &&
+      //    !emailErrorMessage &&
+      //    !passwordErrorMessage &&
+      //    name.length > 0 &&
+      //    surname.length > 0 &&
+      //    age.length > 0 &&
+      //    email.length > 0 &&
+      //    password.length > 0
+
    }
 
    const addRegisterUserCookies = () => {
       // cookideki verileri getir
-      let data = getRegisterUserFromCookies('users');
+      let data = getRegisterUserFromCookies('users'); // 
 
       data.push({
         name:name,
         surname:surname,
         age:age,
         email:email,
+        password: password
       }),
 
       // PROMISES ve parametresi olan fonksiyonlari parametresiz cagirma kismini tekrardan sor
 
       Cookies.set('users', JSON.stringify(data))
    }
+
 
    // name validation
    useEffect(() => {

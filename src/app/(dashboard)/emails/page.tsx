@@ -9,7 +9,6 @@ type Props = {}
 export default function Page({ }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-
   useEffect(() => {
     setIsLoading(true)
     let clearSettimeout = setTimeout(() => {
@@ -22,10 +21,15 @@ export default function Page({ }: Props) {
 
   return (
     <Loader isLoading={isLoading}>
-    <div>home page</div>
+   
+ 
+    <div>Emails</div>
+
+
     </Loader>
   )
 }
+
 
 
 
