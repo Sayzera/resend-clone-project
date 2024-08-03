@@ -23,8 +23,8 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
+
 type Props = {}
 
 type userItemType = {
@@ -36,39 +36,24 @@ type userItemType = {
 }
 
 export default function UserList({ }: Props) {
-  const users = getRegisterUserFromCookies('users')
+  const users = getRegisterUserFromCookies('users');
   const [mounted, setMounted] = useState<boolean>(false);
-
-  const [userData, setUserData] = useState<userItemType[]>(users)
-  const [openModal, setOpenModal] = useState<boolean>(false)
-
-
+  const [userData, setUserData] = useState<userItemType[]>(users);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [editingMode, setEditingMode] = useState<boolean>(true);
+  const [selectedUser, setSelectedUser] = useState<userItemType | null>(null);
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  if (!mounted) return
+  const editValues = () => {
+    if (selectedUser) {
+      
+    }
+  }
 
-  // function checkDuplicateEmail(users) {
-  //   const emailSet = new Set<string>();
-  //   const uniqueUsers = [];
-
-  //   for (const user of users) {
-  //     if (!emailSet.has(user.email)) {
-  //       emailSet.add(user.email);
-  //       uniqueUsers.push(user);
-  //     }
-  //   }
-
-
-
-  //   return uniqueUsers;
-  // }
-
-
-
-  // const uniqueUsers =users
+  if (!mounted) return // null yazabilir miydik diye sor  
 
   return (
     <div>
@@ -77,10 +62,18 @@ export default function UserList({ }: Props) {
       }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogTitle>Editing the User Details</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your account
-              and remove your data from our servers.
+              {editingMode && (
+                <>
+                <input type="text" value={userData[0].name} />
+                <input type="text" value={userData[0].surname} />
+                <input type="text" value={userData[0].age} />
+                <input type="text" value={userData[0].email} />
+                <input type="text" value={userData[0].password} />
+                <button onClick={editValues}>Edit</button>
+                </>
+              )}
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
@@ -108,10 +101,9 @@ export default function UserList({ }: Props) {
             <TableBody>
               {userData?.map((user: userItemType, index: number) => (
                 <TableItem key={index} user={user} users={users} index={index} setUserData={setUserData} 
-                setOpenModal={setOpenModal}
+                setOpenModal={setOpenModal} // SOR
                  />
               ))}
-
             </TableBody>
           </Table>
         </CardContent>

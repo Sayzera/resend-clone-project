@@ -7,7 +7,7 @@ type Props = {
 function ErrorMessage({message}: Props) {
 
   return (
-    <div>{message}</div>
+    <div className="text-red-500 font-bold">{message}</div>
   )
 }
 
