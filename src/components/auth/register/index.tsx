@@ -151,6 +151,8 @@ export default function UserRegister() {
       let data = getRegisterUserFromCookies('users');
       if (data.some((user: any) => user.email === email)) { // SOR!
          setDuplicateEmailErrorMessage('This email address is already taken by another user.')
+      } else {
+         setDuplicateEmailErrorMessage('');
       }
    }, [email])
 

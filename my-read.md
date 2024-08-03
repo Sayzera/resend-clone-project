@@ -33,3 +33,7 @@
 
 * shadcn components
 - table -> https://ui.shadcn.com/docs/components/table
+
+
+* Extensions
+- Auto Rename Tag

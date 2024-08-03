@@ -24,6 +24,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 type Props = {}
 
@@ -35,6 +38,17 @@ type userItemType = {
   password: string;
 }
 
+type rowStateDataType =
+ null |
+  {
+    name?: string 
+    surname?: string  
+    age?: string 
+    email?: string 
+    password?: string 
+  } 
+
+
 export default function UserList({ }: Props) {
   const users = getRegisterUserFromCookies('users');
   const [mounted, setMounted] = useState<boolean>(false);
@@ -43,17 +57,23 @@ export default function UserList({ }: Props) {
   const [editingMode, setEditingMode] = useState<boolean>(true);
   const [selectedUser, setSelectedUser] = useState<userItemType | null>(null);
 
+  const [rowStateData, setRowStateData] = useState<rowStateDataType | null>(null)
+  const [rowStateIndex, setRowStateIndex] = useState<number | null>(null)
+
   useEffect(() => {
     setMounted(true)
   }, [])
 
+  if (!mounted) return
+
   const editValues = () => {
-    if (selectedUser) {
-      
-    }
+
+    
   }
 
-  if (!mounted) return // null yazabilir miydik diye sor  
+
+  console.log(rowStateData);
+
 
   return (
     <div>
@@ -66,12 +86,66 @@ export default function UserList({ }: Props) {
             <DialogDescription>
               {editingMode && (
                 <>
-                <input type="text" value={userData[0].name} />
+                  {/* <input type="text" value={userData[0].name} />
                 <input type="text" value={userData[0].surname} />
                 <input type="text" value={userData[0].age} />
                 <input type="text" value={userData[0].email} />
-                <input type="text" value={userData[0].password} />
-                <button onClick={editValues}>Edit</button>
+                <input type="text" value={userData[0].password} /> */}
+                  <div className="space-y-2">
+                    <div>
+                      <Label htmlFor="name">Name</Label>
+                      <Input id='name' type="text" 
+                      value={rowStateData?.name}
+                      onChange={(e) => {
+                        setRowStateData((prev:rowStateDataType) => ({
+                          ...prev,
+                          name: e.target.value
+                        }))
+                      }}
+                      
+
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="surname">Surname</Label>
+                      <Input id='surname' type="text" value={rowStateData?.surname} 
+                        onChange={(e) => {
+                          setRowStateData((prev:rowStateDataType) => ({
+                            ...prev,
+                            surname: e.target.value
+                          }))
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="age">Age</Label>
+                      <Input id='age' type="text" value={rowStateData?.age} 
+                        onChange={(e) => {
+                          setRowStateData((prev:rowStateDataType) => ({
+                            ...prev,
+                            age: e.target.value
+                          }))
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="email">Email</Label>
+                      <Input id='email' type="text"
+                      onChange={(e) => {
+                        setRowStateData((prev:rowStateDataType) => ({
+                          ...prev,
+                          email: e.target.value
+                        }))
+                      }}                      
+                      value={rowStateData?.email} />
+                    </div>
+
+                  </div>
+
+                  <Button variant={'primary'} className="w-full mt-2" onClick={editValues}>Edit</Button>
                 </>
               )}
             </DialogDescription>
@@ -100,9 +174,11 @@ export default function UserList({ }: Props) {
             </TableHeader>
             <TableBody>
               {userData?.map((user: userItemType, index: number) => (
-                <TableItem key={index} user={user} users={users} index={index} setUserData={setUserData} 
-                setOpenModal={setOpenModal} // SOR
-                 />
+                <TableItem key={index} user={user} users={users} index={index} setUserData={setUserData}
+                  setOpenModal={setOpenModal} // SOR
+                  setRowStateData={setRowStateData}
+                  setRowStateIndex={setRowStateIndex}
+                />
               ))}
             </TableBody>
           </Table>

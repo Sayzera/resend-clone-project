@@ -64,6 +64,7 @@ function Input({
                                 ${error ? 'border border-red-500' : ''}`}
                             type={type}
                             id={id}
+                            onChange={onChange}
                             name={name}
                             value={value}
                         />

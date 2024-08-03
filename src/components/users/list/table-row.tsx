@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import {
     TableCell,
     TableRow,
@@ -20,15 +20,16 @@ type UserItem = {
 type Props = {
     user: UserItem
     index: number
-    setUserData: any
-    setOpenModal: any
+    setUserData: Dispatch<SetStateAction<UserItem[]>>
+    setOpenModal: Dispatch<SetStateAction<boolean>>
     users: UserItem[]
+    setRowStateData:Dispatch<SetStateAction<UserItem | null>>
+    setRowStateIndex:Dispatch<SetStateAction<number | null>>
 }
 
-export default function TableItem({ user, index, setUserData, users, setOpenModal }: Props) {
+export default function TableItem({ user, index, setUserData, users, setOpenModal,setRowStateData,setRowStateIndex }: Props) {
     const { name, surname, age, email, password } = user
-    const [open, setOpen] = useState<boolean>(false)
-    console.log(users)
+
 
     const deleteItem = (index: number) => {
         // users.splice(index, 1)
@@ -50,7 +51,12 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
             <TableCell>
                 <div className='space-x-2 '>
                     <Button className='bg-gradient-to-r from-blue-700 to-blue-400'
-                        onClick={() => setOpenModal(true)}
+                        onClick={() => {
+                            setOpenModal(true)
+                            setRowStateData(user)
+                            setRowStateIndex(index)
+
+                        }}
                     >
                         <FiEdit className='h-4 w-4' />
                     </Button>
