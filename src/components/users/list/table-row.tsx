@@ -6,7 +6,6 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Button } from '@/components/ui/button';
 import { FiEdit } from "react-icons/fi";
-import { getRegisterUserFromCookies } from '@/components/auth/register';
 import Cookies from 'js-cookie'
 
 
@@ -47,7 +46,7 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
             <TableCell>{surname}</TableCell>
             <TableCell>{age}</TableCell>
             <TableCell>{email}</TableCell>
-            <TableCell>{password}</TableCell>
+            <TableCell>{'*'.repeat(password.length)}</TableCell>
             <TableCell>
                 <div className='space-x-2 '>
                     <Button className='bg-gradient-to-r from-blue-700 to-blue-400'

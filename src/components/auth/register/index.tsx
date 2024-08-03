@@ -26,6 +26,7 @@ export default function UserRegister() {
    const [nameErrorMessage, nameSetErrorMessage] = useState<string>('');
    const [surnameErrorMessage, surnameSetErrorMessage] = useState<string>('');
    const [emailErrorMessage, emailSetErrorMessage] = useState<string>('');
+   const [duplicateEmailErrorMessage, setDuplicateEmailErrorMessage] = useState<string>('');
    const [allInputFields, setAllInputFields] = useState({
       name: '',
       surname: '',
@@ -44,9 +45,19 @@ export default function UserRegister() {
       return () => clearTimeout(clearSettimeout)
    }
 
+   const resetFields = () => {
+      setName('');
+      setSurname('');
+      setAge('');
+      setEmail('');
+      setPassword('');
+      setSubmitted(false);
+   }
+
    useEffect(birkezDinle, [])
 
    const handleSubmit = (e: React.FormEvent) => {
+      alert(`The user ${name} ${surname} is registered!`)
       e.preventDefault();
       setSubmitted(true);
       setAllInputFields({
@@ -59,25 +70,14 @@ export default function UserRegister() {
       // register user  
       addRegisterUserCookies();
 
-
-      //    !nameErrorMessage &&
-      //    !surnameErrorMessage &&
-      //    !ageErrorMessage &&
-      //    !emailErrorMessage &&
-      //    !passwordErrorMessage &&
-      //    name.length > 0 &&
-      //    surname.length > 0 &&
-      //    age.length > 0 &&
-      //    email.length > 0 &&
-      //    password.length > 0
-
+      resetFields();
    }
 
    const addRegisterUserCookies = () => {
       // cookideki verileri getir
       let data = getRegisterUserFromCookies('users'); // 
 
-      data.push({
+      data.push({ //overwrite etmez ek array objeleri eklenir
         name:name,
         surname:surname,
         age:age,
@@ -85,11 +85,8 @@ export default function UserRegister() {
         password: password
       }),
 
-      // PROMISES ve parametresi olan fonksiyonlari parametresiz cagirma kismini tekrardan sor
-
       Cookies.set('users', JSON.stringify(data))
    }
-
 
    // name validation
    useEffect(() => {
@@ -151,6 +148,10 @@ export default function UserRegister() {
       } else {
          emailSetErrorMessage('')
       }
+      let data = getRegisterUserFromCookies('users');
+      if (data.some((user: any) => user.email === email)) { // SOR!
+         setDuplicateEmailErrorMessage('This email address is already taken by another user.')
+      }
    }, [email])
 
    // form submission validation
@@ -160,6 +161,7 @@ export default function UserRegister() {
          !surnameErrorMessage &&
          !ageErrorMessage &&
          !emailErrorMessage &&
+         !duplicateEmailErrorMessage &&
          !passwordErrorMessage &&
          name.length > 0 &&
          surname.length > 0 &&
@@ -223,7 +225,7 @@ export default function UserRegister() {
                   className="border p-2 w-full"
                />
                 <div>
-                {<ErrorMessage message={emailErrorMessage} />}
+                {<ErrorMessage message={emailErrorMessage || duplicateEmailErrorMessage} />}
                </div>
             </div>
             <div className="mb-4">
@@ -257,6 +259,6 @@ export default function UserRegister() {
          )}
 
       </div>
-    </Loader> // SOR Loader icindeki children kavrami ve neden input fieldlar loader component in icinde yazildi
+    </Loader>
    );
 }
