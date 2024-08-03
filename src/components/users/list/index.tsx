@@ -68,6 +68,15 @@ export default function UserList({ }: Props) {
 
   const editValues = () => {
 
+    if (rowStateIndex === null) {
+      return
+    }
+
+    users[rowStateIndex] = rowStateData;
+
+    setUserData(users)
+    
+
     
   }
 
