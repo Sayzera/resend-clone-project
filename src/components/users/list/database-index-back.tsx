@@ -29,14 +29,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Cookies from 'js-cookie'
 import {Helmet} from "react-helmet";
-import { User } from "@prisma/client"
 
 
-type Props = {
-  users : {
-    data: User
-  }
-}
+type Props = {}
 
 type userItemType = {
   name: string;
@@ -57,13 +52,10 @@ type rowStateDataType =
   } 
 
 
-export default function UserList({ users }: Props) {
+export default function UserList({ }: Props) {
+  const users = getRegisterUserFromCookies('users');
   const [mounted, setMounted] = useState<boolean>(false);
-
-  // databesden gelen veri
-  const [userData, setUserData] = useState<User>(users.data);
-
-
+  const [userData, setUserData] = useState<userItemType[]>(users);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [editingMode, setEditingMode] = useState<boolean>(true);
   const [selectedUser, setSelectedUser] = useState<userItemType | null>(null);
@@ -208,6 +200,4 @@ export default function UserList({ users }: Props) {
       </Card>
     </div>
   )
-
-
 }

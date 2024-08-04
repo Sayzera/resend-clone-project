@@ -42,6 +42,8 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
 
     }
     return (
+    <>
+   
         <TableRow>
             <TableCell>{name}</TableCell>
             <TableCell>{surname}</TableCell>
@@ -49,8 +51,11 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
             <TableCell>{email}</TableCell>
             <TableCell>{'*'.repeat(password.length)}</TableCell>
             <TableCell>
-                <div className='space-x-2 '>
-                    <Button className='bg-gradient-to-r from-blue-700 to-blue-400'
+                <div className='sm:space-y-2 xl:space-x-2 '>
+                    <Button className='md:bg-gradient-to-r md:from-blue-700 md:to-blue-400
+                    sm:bg-gradient-to-r sm:from-red-700 sm:to-red-400
+                    
+                    '
                         onClick={() => {
                             setOpenModal(true)
                             setRowStateData(user)
@@ -67,5 +72,6 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
 
             </TableCell>
         </TableRow>
+    </>
     )
 }

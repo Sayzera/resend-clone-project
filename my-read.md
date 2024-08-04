@@ -37,3 +37,12 @@
 
 * Extensions
 - Auto Rename Tag
+
+
+* prisma 
+- npm install -D prisma [1]
+- npx prisma init [2]
+- npx prisma generate [kodları aldıktan sonra]
+- npx prisma db push  [kodları aldıktan sonra]
+- npx prisma studio
+
