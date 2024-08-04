@@ -27,6 +27,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import Cookies from 'js-cookie'
 
 type Props = {}
 
@@ -67,17 +68,14 @@ export default function UserList({ }: Props) {
   if (!mounted) return
 
   const editValues = () => {
-
     if (rowStateIndex === null) {
       return
     }
 
     users[rowStateIndex] = rowStateData;
-
     setUserData(users)
-    
-
-    
+    let data = rowStateData;
+    Cookies.set('users',JSON.stringify(data));
   }
 
 
@@ -95,11 +93,6 @@ export default function UserList({ }: Props) {
             <DialogDescription>
               {editingMode && (
                 <>
-                  {/* <input type="text" value={userData[0].name} />
-                <input type="text" value={userData[0].surname} />
-                <input type="text" value={userData[0].age} />
-                <input type="text" value={userData[0].email} />
-                <input type="text" value={userData[0].password} /> */}
                   <div className="space-y-2">
                     <div>
                       <Label htmlFor="name">Name</Label>
@@ -184,7 +177,7 @@ export default function UserList({ }: Props) {
             <TableBody>
               {userData?.map((user: userItemType, index: number) => (
                 <TableItem key={index} user={user} users={users} index={index} setUserData={setUserData}
-                  setOpenModal={setOpenModal} // SOR
+                  setOpenModal={setOpenModal}
                   setRowStateData={setRowStateData}
                   setRowStateIndex={setRowStateIndex}
                 />
