@@ -75,7 +75,11 @@ export default function UserRegister() {
 
    const addRegisterUserCookies = () => {
       // cookideki verileri getir
-      let data = getRegisterUserFromCookies('users'); // 
+      let data = getRegisterUserFromCookies('users');
+
+      if (!Array.isArray(data)) {
+         data = [];
+      }
 
       data.push({ //overwrite etmez ek array objeleri eklenir
         name:name,
@@ -149,7 +153,7 @@ export default function UserRegister() {
          emailSetErrorMessage('')
       }
       let data = getRegisterUserFromCookies('users');
-      if (data.some((user: any) => user.email === email)) { // SOR!
+      if (Array.isArray(data) && data.some((user: any) => user.email === email)) {
          setDuplicateEmailErrorMessage('This email address is already taken by another user.')
       } else {
          setDuplicateEmailErrorMessage('');
