@@ -67,7 +67,7 @@ type Props = {}
 function Menu({ }: Props) { // gelen verideki objenin tipleri tanimlanir (array objesi)
     return (
         <nav className="mt-6 flex-1">
-            {
+            {/* {
                 menuItems?.map((item) => (
                     <MenuItem
                         id={item.id}
@@ -77,7 +77,7 @@ function Menu({ }: Props) { // gelen verideki objenin tipleri tanimlanir (array 
                         key={item.id}
                     />
                 ))
-            }
+            } */}
 
            <MenuSubItem
              isActiveMenuItem={false}
