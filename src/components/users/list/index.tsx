@@ -29,9 +29,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Cookies from 'js-cookie'
 import {Helmet} from "react-helmet";
-import ErrorMessage from "@/components/auth/register/error-message"
+import { User } from "@prisma/client"
 
-type Props = {}
+
+type Props = {
+  users : {
+    data: User
+  }
+}
 
 type userItemType = {
   name: string;
@@ -51,123 +56,34 @@ type rowStateDataType =
     password?: string 
   } 
 
-export default function UserList({ }: Props) {
-  const users = getRegisterUserFromCookies('users');
+
+export default function UserList({ users }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
-  const [userData, setUserData] = useState<userItemType[]>(users);
+  // databesden gelen veri
+  const [userData, setUserData] = useState<User>(users.data);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [rowStateData, setRowStateData] = useState<rowStateDataType | null>(null);
-  const [rowStateIndex, setRowStateIndex] = useState<number | null>(null);
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
-  const [ageErrorMessage, ageSetErrorMessage] = useState<string>('');
-  const [nameErrorMessage, nameSetErrorMessage] = useState<string>('');
-  const [surnameErrorMessage, surnameSetErrorMessage] = useState<string>('');
-  const [emailErrorMessage, emailSetErrorMessage] = useState<string>('');
-  const [duplicateEmailErrorMessage, setDuplicateEmailErrorMessage] = useState<string>('');
+  const [editingMode, setEditingMode] = useState<boolean>(true);
+  const [rowStateData, setRowStateData] = useState<rowStateDataType | null>(null)
+  const [rowStateIndex, setRowStateIndex] = useState<number | null>(null)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  useEffect(() => {
-    if (rowStateData?.name) {
-      if (rowStateData.name.length < 2) {
-        nameSetErrorMessage('Minimum 2 karakter girmelisiniz');
-      } else if (rowStateData.name.length > 50) {
-        nameSetErrorMessage('Maksimum 50 karakter girebilirsiniz');
-      } else {
-        nameSetErrorMessage('');
-      }
-    } else {
-      nameSetErrorMessage('');
-    }
-  }, [rowStateData?.name]);
-
-  useEffect(() => {
-    if (rowStateData?.surname) {
-      if (rowStateData.surname.length < 2) {
-        surnameSetErrorMessage('Minimum 2 karakter girmelisiniz');
-      } else if (rowStateData.surname.length > 50) {
-        surnameSetErrorMessage('Maksimum 50 karakter girebilirsiniz');
-      } else {
-        surnameSetErrorMessage('');
-      }
-    } else {
-      surnameSetErrorMessage('');
-    }
-  }, [rowStateData?.surname]);
-
-  useEffect(() => {
-    if (rowStateData?.age) {
-      if (rowStateData.age.length > 0 && Number(rowStateData.age) < 18) {
-        ageSetErrorMessage('18 yaşından büyük olmalısınız');
-      } else {
-        ageSetErrorMessage('');
-      }
-    }
-  }, [rowStateData?.age]);
-
-  useEffect(() => {
-
-    const email = rowStateData?.email || '';
-
-    let result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(email)
-    if(!result && email.length > 0) {
-       emailSetErrorMessage('Hatali')
-    } else {
-       emailSetErrorMessage('')
-    }
-    let data = getRegisterUserFromCookies('users');
-    if (Array.isArray(data) && data.some((user: any) => user.email === email)) {
-       setDuplicateEmailErrorMessage('This email address is already taken by another user.')
-    } else {
-       setDuplicateEmailErrorMessage('');
-    }
-  }, [rowStateData?.email]);
-
-  useEffect(() => {
-    if (rowStateData?.password) {
-      if (rowStateData.password.length > 0 && rowStateData.password.length < 6) {
-        setPasswordErrorMessage('Minimum 6 değer girmelisiniz');
-      } else if (rowStateData.password.length > 50) {
-        setPasswordErrorMessage('Maksimum 16 karakter girebilirsiniz');
-      } else {
-        setPasswordErrorMessage('');
-      }
-    }
-  }, [rowStateData?.password]);
-
   if (!mounted) return
 
   const editValues = () => {
     if (rowStateIndex === null) {
-      return;
+      return
     }
-  
-    const updatedUsers = [...users];
-    updatedUsers[rowStateIndex] = { ...rowStateData };
-  
-    setUserData(updatedUsers);
-  
-    Cookies.set('users', JSON.stringify(updatedUsers));
-  }
 
-  const isFormValid = () => {
-    return (
-      !nameErrorMessage &&
-      !surnameErrorMessage &&
-      !ageErrorMessage &&
-      !emailErrorMessage &&
-      !duplicateEmailErrorMessage &&
-      !passwordErrorMessage &&
-      rowStateData && 
-      rowStateData.name && rowStateData.name.length > 0 &&
-      rowStateData.surname && rowStateData.surname.length > 0 &&
-      rowStateData.age && rowStateData.age.length > 0 &&
-      rowStateData.email && rowStateData.email.length > 0 &&
-      rowStateData.password && rowStateData.password.length > 0
-    );
-  };
+    users[rowStateIndex] = rowStateData;
+    setUserData(users)
+    let data = rowStateData;
+
+    Cookies.set('users',JSON.stringify(data));
+
+  }
 
   return (
     <div>
@@ -183,7 +99,7 @@ export default function UserList({ }: Props) {
           <DialogHeader>
             <DialogTitle>Editing the User Details</DialogTitle>
             <DialogDescription>
-              {(
+              {editingMode && (
                 <>
                   <div className="space-y-2">
                     <div>
@@ -196,10 +112,9 @@ export default function UserList({ }: Props) {
                           name: e.target.value
                         }))
                       }}
+                      
+
                       />
-                    </div>
-                    <div className="text-red-500 font-bold">
-                      {nameErrorMessage}
                     </div>
 
                     <div>
@@ -213,9 +128,6 @@ export default function UserList({ }: Props) {
                         }}
                       />
                     </div>
-                    <div className="text-red-500 font-bold">
-                      {surnameErrorMessage}
-                    </div>
 
                     <div>
                       <Label htmlFor="age">Age</Label>
@@ -227,9 +139,6 @@ export default function UserList({ }: Props) {
                           }))
                         }}
                       />
-                    </div>
-                    <div className="text-red-500 font-bold">
-                      {ageErrorMessage}
                     </div>
 
                     <div>
@@ -243,29 +152,10 @@ export default function UserList({ }: Props) {
                       }}                      
                       value={rowStateData?.email} />
                     </div>
-                    <div className="text-red-500 font-bold">
-                      {emailErrorMessage || duplicateEmailErrorMessage}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="password">Password</Label>
-                      <Input id='password' type="text" 
-                      value={rowStateData?.password}
-                      onChange={(e) => {
-                        setRowStateData((prev:rowStateDataType) => ({
-                          ...prev,
-                          password: e.target.value
-                        }))
-                      }}
-                      />
-                    </div>
-                    <div className="text-red-500 font-bold">
-                      {passwordErrorMessage}
-                    </div>
 
                   </div>
 
-                  <Button disabled={!isFormValid()} variant={'primary'} className="w-full mt-2" onClick={editValues}>Edit</Button>
+                  <Button variant={'primary'} className="w-full mt-2" onClick={editValues}>Edit</Button>
                 </>
               )}
             </DialogDescription>
@@ -293,7 +183,7 @@ export default function UserList({ }: Props) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {Array.isArray(userData) && userData.map((user: userItemType, index: number) => (
+              {userData?.map((user: userItemType, index: number) => (
                 <TableItem key={index} user={user} users={users} index={index} setUserData={setUserData}
                   setOpenModal={setOpenModal}
                   setRowStateData={setRowStateData}
