@@ -9,6 +9,7 @@ export default async function UserListPage({}: Props) {
 
   return (
     <div className='p-5'>
+      <h2>Merhaba</h2>
         <UserList users={users} />
     </div>
   )

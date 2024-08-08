@@ -152,7 +152,7 @@ export default function UserList({ }: Props) {
     Cookies.set('users', JSON.stringify(updatedUsers));
   }
 
-  const isFormValid = () => {
+  const isFormValid = () => { // arrow function
     return (
       !nameErrorMessage &&
       !surnameErrorMessage &&
