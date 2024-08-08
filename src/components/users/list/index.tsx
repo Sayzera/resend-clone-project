@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/card"
 import React, { useEffect, useState } from 'react'
 import TableItem from "./table-row"
-import { getRegisterUserFromCookies } from "@/components/auth/register"
 import {
   Dialog,
   DialogContent,
@@ -38,14 +37,6 @@ type Props = {
   }
 }
 
-type userItemType = {
-  name: string;
-  surname: string;
-  age: string;
-  email: string;
-  password: string;
-}
-
 type rowStateDataType =
  null |
   {
@@ -62,7 +53,6 @@ export default function UserList({ users }: Props) {
   // databesden gelen veri
   const [userData, setUserData] = useState<User>(users.data);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [editingMode, setEditingMode] = useState<boolean>(true);
   const [rowStateData, setRowStateData] = useState<rowStateDataType | null>(null)
   const [rowStateIndex, setRowStateIndex] = useState<number | null>(null)
 
@@ -99,7 +89,7 @@ export default function UserList({ users }: Props) {
           <DialogHeader>
             <DialogTitle>Editing the User Details</DialogTitle>
             <DialogDescription>
-              {editingMode && (
+              {(
                 <>
                   <div className="space-y-2">
                     <div>
@@ -183,7 +173,7 @@ export default function UserList({ users }: Props) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {userData?.map((user: userItemType, index: number) => (
+              {userData?.map((user: User, index: number) => (
                 <TableItem key={index} user={user} users={users} index={index} setUserData={setUserData}
                   setOpenModal={setOpenModal}
                   setRowStateData={setRowStateData}
