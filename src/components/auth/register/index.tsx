@@ -4,6 +4,7 @@ import Loader from "@/components/loader";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
 import ErrorMessage from "./error-message";
+import { onAddUser } from "@/actions/user";
 
 export const getRegisterUserFromCookies = (name:string) => {
    let data = Cookies.get(name) 
@@ -68,28 +69,37 @@ export default function UserRegister() {
          password
       });
       // register user  
-      addRegisterUserCookies();
+      addRegisterUser();
 
       resetFields();
    }
 
-   const addRegisterUserCookies = () => {
+   const addRegisterUser = async () => {
       // cookideki verileri getir
-      let data = getRegisterUserFromCookies('users');
+      // let data = getRegisterUserFromCookies('users');
 
-      if (!Array.isArray(data)) {
-         data = [];
-      }
+      // if (!Array.isArray(data)) {
+      //    data = [];
+      // }
 
-      data.push({ //overwrite etmez ek array objeleri eklenir
+      // data.push({ //overwrite etmez ek array objeleri eklenir
+
+      // }),
+
+      // Cookies.set('users', JSON.stringify(data))
+
+     const result = await onAddUser({
         name:name,
         surname:surname,
         age:age,
         email:email,
         password: password
-      }),
+      })
+      
+      
 
-      Cookies.set('users', JSON.stringify(data))
+
+
    }
 
    // name validation

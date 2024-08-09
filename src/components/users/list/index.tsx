@@ -27,31 +27,36 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Cookies from 'js-cookie'
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 import { User } from "@prisma/client"
 
 
 type Props = {
-  users : {
-    data: User
-  }
+  users: {
+    id: string;
+    name: string;
+    surname: string;
+    email: string;
+    age: number;
+    password: string;
+  }[] | undefined
 }
 
 type rowStateDataType =
- null |
+  null |
   {
-    name?: string 
-    surname?: string  
-    age?: string 
-    email?: string 
-    password?: string 
-  } 
+    name?: string
+    surname?: string
+    age?: string
+    email?: string
+    password?: string
+  }
 
 
 export default function UserList({ users }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
   // databesden gelen veri
-  const [userData, setUserData] = useState<User>(users.data);
+  const [userData, setUserData] = useState<User[] | undefined>(users);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [rowStateData, setRowStateData] = useState<rowStateDataType | null>(null)
   const [rowStateIndex, setRowStateIndex] = useState<number | null>(null)
@@ -71,16 +76,16 @@ export default function UserList({ users }: Props) {
     setUserData(users)
     let data = rowStateData;
 
-    Cookies.set('users',JSON.stringify(data));
+    Cookies.set('users', JSON.stringify(data));
 
   }
 
   return (
     <div>
-    <Helmet>
-    <meta charSet="utf-8" />
-    <title>My Title</title>
-     </Helmet>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>My Title</title>
+      </Helmet>
 
       <Dialog open={openModal} onOpenChange={() => {
         setOpenModal(false)
@@ -94,24 +99,24 @@ export default function UserList({ users }: Props) {
                   <div className="space-y-2">
                     <div>
                       <Label htmlFor="name">Name</Label>
-                      <Input id='name' type="text" 
-                      value={rowStateData?.name}
-                      onChange={(e) => {
-                        setRowStateData((prev:rowStateDataType) => ({
-                          ...prev,
-                          name: e.target.value
-                        }))
-                      }}
-                      
+                      <Input id='name' type="text"
+                        value={rowStateData?.name}
+                        onChange={(e) => {
+                          setRowStateData((prev: rowStateDataType) => ({
+                            ...prev,
+                            name: e.target.value
+                          }))
+                        }}
+
 
                       />
                     </div>
 
                     <div>
                       <Label htmlFor="surname">Surname</Label>
-                      <Input id='surname' type="text" value={rowStateData?.surname} 
+                      <Input id='surname' type="text" value={rowStateData?.surname}
                         onChange={(e) => {
-                          setRowStateData((prev:rowStateDataType) => ({
+                          setRowStateData((prev: rowStateDataType) => ({
                             ...prev,
                             surname: e.target.value
                           }))
@@ -121,9 +126,9 @@ export default function UserList({ users }: Props) {
 
                     <div>
                       <Label htmlFor="age">Age</Label>
-                      <Input id='age' type="text" value={rowStateData?.age} 
+                      <Input id='age' type="text" value={rowStateData?.age}
                         onChange={(e) => {
-                          setRowStateData((prev:rowStateDataType) => ({
+                          setRowStateData((prev: rowStateDataType) => ({
                             ...prev,
                             age: e.target.value
                           }))
@@ -134,13 +139,13 @@ export default function UserList({ users }: Props) {
                     <div>
                       <Label htmlFor="email">Email</Label>
                       <Input id='email' type="text"
-                      onChange={(e) => {
-                        setRowStateData((prev:rowStateDataType) => ({
-                          ...prev,
-                          email: e.target.value
-                        }))
-                      }}                      
-                      value={rowStateData?.email} />
+                        onChange={(e) => {
+                          setRowStateData((prev: rowStateDataType) => ({
+                            ...prev,
+                            email: e.target.value
+                          }))
+                        }}
+                        value={rowStateData?.email} />
                     </div>
 
                   </div>

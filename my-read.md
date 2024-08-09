@@ -46,3 +46,5 @@
 - npx prisma db push  [kodları aldıktan sonra]
 - npx prisma studio
 
+
+* https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses
