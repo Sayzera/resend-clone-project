@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
 import ErrorMessage from "./error-message";
 import { onAddUser } from "@/actions/user";
+import { useToast } from "@/components/ui/use-toast"
 
 export const getRegisterUserFromCookies = (name:string) => {
+
    let data = Cookies.get(name) 
    if(data) {
       return JSON.parse(data)
@@ -15,6 +17,8 @@ export const getRegisterUserFromCookies = (name:string) => {
 }
 
 export default function UserRegister() {
+   const { toast } = useToast()
+
    const [name, setName] = useState<string>('');
    const [surname, setSurname] = useState<string>('');
    const [age, setAge] = useState<string>('');
@@ -58,7 +62,6 @@ export default function UserRegister() {
    useEffect(birkezDinle, [])
 
    const handleSubmit = (e: React.FormEvent) => {
-      alert(`The user ${name} ${surname} is registered!`)
       e.preventDefault();
       setSubmitted(true);
       setAllInputFields({
@@ -96,7 +99,18 @@ export default function UserRegister() {
         password: password
       })
       
-      
+
+      if(result?.status === 200) {
+         toast({
+          title: "Başarılı",
+          description: result.message,
+        }) 
+      } else {
+         toast({
+            title: "Hata!",
+            description: 'Kullanıcı eklenemdi lütfen daha sonra tekrar deneyiniz!',
+          }) 
+      }
 
 
 

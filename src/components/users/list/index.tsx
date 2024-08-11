@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input"
 import Cookies from 'js-cookie'
 import { Helmet } from "react-helmet";
 import { User } from "@prisma/client"
+import { onEditUser } from "@/actions/user"
 
 
 type Props = {
@@ -45,6 +46,8 @@ type Props = {
 type rowStateDataType =
   null |
   {
+
+    id?:string
     name?: string
     surname?: string
     age?: string
@@ -58,8 +61,8 @@ export default function UserList({ users }: Props) {
   // databesden gelen veri
   const [userData, setUserData] = useState<User[] | undefined>(users);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [rowStateData, setRowStateData] = useState<rowStateDataType | null>(null)
-  const [rowStateIndex, setRowStateIndex] = useState<number | null>(null)
+  const [rowStateData, setRowStateData] = useState<rowStateDataType | null >(null)
+  const [rowStateIndex, setRowStateIndex] = useState<number | null | string>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -67,16 +70,33 @@ export default function UserList({ users }: Props) {
 
   if (!mounted) return
 
-  const editValues = () => {
-    if (rowStateIndex === null) {
-      return
+  const editValues = async () => {
+
+    if(rowStateData) {
+      const result = await onEditUser(rowStateData)
+
+
+      // işlem başarılı mı kontrol et 
+
+      // onGetUserList çağır gelen veriyi userData statetınde setle
+      
+      // toast mesajlarını ayarla
+
+      // modalıd kapat
+
+      console.log(result, 'result')
+
     }
+    // console.log(rowStateData, 'rowStateData')
+    // if (rowStateIndex === null) {
+    //   return
+    // }
 
-    users[rowStateIndex] = rowStateData;
-    setUserData(users)
-    let data = rowStateData;
+    // users[rowStateIndex] = rowStateData;
+    // setUserData(users)
+    // let data = rowStateData;
 
-    Cookies.set('users', JSON.stringify(data));
+    // Cookies.set('users', JSON.stringify(data));
 
   }
 
@@ -192,3 +212,4 @@ export default function UserList({ users }: Props) {
     </div>
   )
 }
+

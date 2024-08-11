@@ -1,8 +1,9 @@
 import "@/app/globals.css"
 import { Inter as FontSans } from "next/font/google"
- 
+import { Toaster } from "@/components/ui/toaster"
+
 import { cn } from "@/lib/utils"
- 
+
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -11,7 +12,7 @@ const fontSans = FontSans({
 type RootLayoutProps = {
   children: React.ReactNode
 }
- 
+
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontSans.variable
         )}
       >
+        <Toaster />
         {children}
+
       </body>
     </html>
   )
