@@ -6,7 +6,6 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { Button } from '@/components/ui/button';
 import { FiEdit } from "react-icons/fi";
-import Cookies from 'js-cookie'
 import { User } from '@prisma/client';
 import { onDeleteUser, onGetUserList } from '@/actions/user';
 

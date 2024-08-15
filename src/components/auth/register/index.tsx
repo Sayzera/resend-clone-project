@@ -170,7 +170,7 @@ export default function UserRegister() {
 
    // email validation
    useEffect(() => {
-      let result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(email)
+      const result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(email)
       if(!result && email.length > 0) {
          emailSetErrorMessage('Hatali')
       } else {
