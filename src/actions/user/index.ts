@@ -60,6 +60,7 @@ export const onAddUser = async (data: onAddUserProps) => {
             }
         });
 
+
         if (existingUser) {
             return {
                 status: 400,
@@ -95,87 +96,47 @@ export const onAddUser = async (data: onAddUserProps) => {
 
 export const onEditUser = async (data: onEditUserProps) => {
 
-    let canBeEdited = false;
+    // WIP : Aynı email adresi eklenemesin
+
+    let canBeEdited = true;
     const result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(data.email || '');
+
+    if (!result) {
+        canBeEdited = false
+    }
 
     if (!data?.id) return;
 
     // validation
-
-    if (data?.name) {
-        if (data.name.length > 2) {
-            if (data.name.length < 50) {
-                canBeEdited = true;
-            } else {
-                canBeEdited = false;
-            }
-        }
-        else {
-            canBeEdited = false;
-        }
-    } else {
+    if (!data?.name) {
+        canBeEdited = false;
+    }
+    if (data.name && (data.name.length < 2 || data.name.length > 50)) {
+        canBeEdited = false;
+    }
+    if (!data?.surname) {
+        canBeEdited = false;
+    }
+    if (data.surname && (data.surname.length < 2 || data.surname.length > 50)) {
+        canBeEdited = false;
+    }
+    if (!data?.password) {
+        canBeEdited = false;
+    }
+    if (data.password && (data.password.length < 6 || data.password.length > 16)) {
+        canBeEdited = false;
+    }
+    if (!data?.age) {
+        canBeEdited = false;
+    }
+    let _age = Number(data.age) ?? 0
+    if (_age && (_age < 18)) {
+        canBeEdited = false;
+    }
+    if (data.email && (data.email.length < 0 || data.email.length > 200)) {
         canBeEdited = false;
     }
 
-    if (data?.surname) {
-        if (data.surname.length > 2) {
-            if (data.surname.length < 50) {
-                canBeEdited = true;
-            } else {
-                canBeEdited = false;
-            }
-        }
-        else {
-            canBeEdited = false;
-        }
-    } else {
-        canBeEdited = false;
-    }
-
-    if (data?.password) {
-        if (data.password.length > 6) {
-            if (data.password.length < 16) {
-                canBeEdited = true;
-            } else {
-                canBeEdited = false;
-            }
-        }
-        else {
-            canBeEdited = false;
-        }
-    } else {
-        canBeEdited = false;
-    }
-
-    if (data?.age) {
-        if (data.age.length > 0) {
-            if (Number(data.age) > 18) {
-                canBeEdited = true;
-            } else {
-                canBeEdited = false;
-            }
-        }
-        else {
-            canBeEdited = false;
-        }
-    } else {
-        canBeEdited = false;
-    }
-
-    if (data?.email) {
-        if (data.email.length > 0) {
-            if (result) {
-                canBeEdited = true;
-            } else {
-                canBeEdited = false;
-            }
-        }
-        else {
-            canBeEdited = false;
-        }
-    } else {
-        canBeEdited = false;
-    }
 
     /**
      * CR[U]D
@@ -204,7 +165,7 @@ export const onEditUser = async (data: onEditUserProps) => {
             }
         })
 
-        if(!isUpdated) {
+        if (!isUpdated) {
             const response = {
                 status: 400,
                 message: 'Kullanıcı güncellenemedi',
@@ -212,15 +173,15 @@ export const onEditUser = async (data: onEditUserProps) => {
 
             return response
         }
-        if(isUpdated) {
-            return  {
+        if (isUpdated) {
+            return {
                 status: 200,
                 message: 'Kullanıcı başarıyla editlendi'
             }
-        } 
-    
-    }catch(error) {
-        console.log('[onEditUser]',error)
+        }
+
+    } catch (error) {
+        console.log('[onEditUser]', error)
     }
 
 
@@ -264,4 +225,37 @@ export const onDeleteUser = async (id: string) => {
     }
 
 
+}
+
+export const onGetByIdUser = async (id:string) => {
+    if(!id) return;
+
+    try {
+        const result = await client.user.findUnique({
+            where: {
+                // id:id
+                id
+            },
+            // select: {
+            //     id:true,
+            //     name:true
+            // }
+        })
+
+        if(!result) {
+            return {
+                status: 404,
+                message: 'Kullanıcı bulunamadı',
+                data: []
+            }
+        }
+
+        return {
+            status:200,
+            message:'Kullanıcı başarıyla getirildi',
+            data: result
+        }
+    }catch(e) {
+        console.log('[onGetByIdUser]', e)
+    }
 }

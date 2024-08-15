@@ -7,7 +7,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { Button } from '@/components/ui/button';
 import { FiEdit } from "react-icons/fi";
 import { User } from '@prisma/client';
-import { onDeleteUser, onGetUserList } from '@/actions/user';
+import { onDeleteUser, onGetByIdUser, onGetUserList } from '@/actions/user';
 
 
 
@@ -45,8 +45,16 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
         }
 
 
-
     }
+
+
+    const getById = async (id:string) => {
+        const result = await onGetByIdUser(id)
+        if(result?.status == 200 ) {
+          setRowStateData(result?.data)
+        }
+    } 
+
     return (
         <>
 
@@ -64,9 +72,11 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
                     '
                             onClick={() => {
                                 setOpenModal(true)
-                                setRowStateData(user)
+                                // setRowStateData(user)
+                                getById(id);
                                 setRowStateIndex(index)
 
+                              
                             }}
                         >
                             <FiEdit className='h-4 w-4' />

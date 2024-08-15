@@ -108,7 +108,7 @@ export default function UserRegister() {
       } else {
          toast({
             title: "Hata!",
-            description: 'Kullanıcı eklenemdi lütfen daha sonra tekrar deneyiniz!',
+            description: result?.message,
           }) 
       }
 
