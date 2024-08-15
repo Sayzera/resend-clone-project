@@ -5,7 +5,7 @@ type onAddUserProps = {
     name: string;
     surname: string;
     email: string;
-    age: number | string;
+    age: string;
     password: string;
 }
 type onEditUserProps = {
@@ -13,7 +13,7 @@ type onEditUserProps = {
     name?: string;
     surname?: string;
     email?: string;
-    age?: number | string;
+    age?: string;
     password?: string;
 }
 
@@ -52,15 +52,20 @@ export const onGetUserList = async () => {
  * @returns
  */
 export const onAddUser = async (data: onAddUserProps) => {
+
     try {
+        const existingUser = await client.user.findUnique({
+            where: {
+                email: data.email,
+            }
+        });
 
-        /**
-         * [C]RUD
-         * INSERT INTO table_name (column1, column2, column3, ...)
-            VALUES (value1, value2, value3, ...);
-         */
-
-        // TODO:  existingUser
+        if (existingUser) {
+            return {
+                status: 400,
+                message: 'Bu email adresi baska bir kullanici tarafindan kullaniliyor.',
+            }
+        }
 
         const addUser = await client.user.create({
             data: {
@@ -70,25 +75,107 @@ export const onAddUser = async (data: onAddUserProps) => {
                 email: data.email,
                 password: data.password,
             }
-        })
-
+        });
 
         return {
             status: 200,
             message: 'Kullanıcı başarıyla oluşturuldu.',
             data: addUser
-        }
+        };
 
     } catch (e) {
-        console.log('[onAddUser]', e)
+        console.log('[onAddUser]', e);
+        return {
+            status: 500,
+            message: 'Server tarafinda bir hata olustu.',
+        };
     }
-}
+};
+
 
 export const onEditUser = async (data: onEditUserProps) => {
+
+    let canBeEdited = false;
+    const result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(data.email || '');
+
     if (!data?.id) return;
 
     // validation
 
+    if (data?.name) {
+        if (data.name.length > 2) {
+            if (data.name.length < 50) {
+                canBeEdited = true;
+            } else {
+                canBeEdited = false;
+            }
+        }
+        else {
+            canBeEdited = false;
+        }
+    } else {
+        canBeEdited = false;
+    }
+
+    if (data?.surname) {
+        if (data.surname.length > 2) {
+            if (data.surname.length < 50) {
+                canBeEdited = true;
+            } else {
+                canBeEdited = false;
+            }
+        }
+        else {
+            canBeEdited = false;
+        }
+    } else {
+        canBeEdited = false;
+    }
+
+    if (data?.password) {
+        if (data.password.length > 6) {
+            if (data.password.length < 16) {
+                canBeEdited = true;
+            } else {
+                canBeEdited = false;
+            }
+        }
+        else {
+            canBeEdited = false;
+        }
+    } else {
+        canBeEdited = false;
+    }
+
+    if (data?.age) {
+        if (data.age.length > 0) {
+            if (Number(data.age) > 18) {
+                canBeEdited = true;
+            } else {
+                canBeEdited = false;
+            }
+        }
+        else {
+            canBeEdited = false;
+        }
+    } else {
+        canBeEdited = false;
+    }
+
+    if (data?.email) {
+        if (data.email.length > 0) {
+            if (result) {
+                canBeEdited = true;
+            } else {
+                canBeEdited = false;
+            }
+        }
+        else {
+            canBeEdited = false;
+        }
+    } else {
+        canBeEdited = false;
+    }
 
     /**
      * CR[U]D
@@ -96,7 +183,7 @@ export const onEditUser = async (data: onEditUserProps) => {
     SET ContactName = 'Alfred Schmidt', City= 'Frankfurt'
     WHERE CustomerID = 1;
      */
-    if (!data?.email || !data?.age || !data.name || !data.password || !data.surname) {
+    if (!canBeEdited || !data?.email || !data?.age || !data.name || !data.password || !data.surname) {
         return {
             status: 400,
             message: 'Bad request!',
@@ -128,7 +215,7 @@ export const onEditUser = async (data: onEditUserProps) => {
         if(isUpdated) {
             return  {
                 status: 200,
-                message: 'Kullanıcı başarıyla gönderildi'
+                message: 'Kullanıcı başarıyla editlendi'
             }
         } 
     

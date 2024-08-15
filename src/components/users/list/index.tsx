@@ -26,10 +26,9 @@ import {
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import Cookies from 'js-cookie'
-import { Helmet } from "react-helmet";
 import { User } from "@prisma/client"
-import { onEditUser } from "@/actions/user"
+import { onEditUser, onGetUserList } from "@/actions/user"
+import { useToast } from "@/components/ui/use-toast"
 
 
 type Props = {
@@ -58,11 +57,12 @@ type rowStateDataType =
 
 export default function UserList({ users }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
-  // databesden gelen veri
+  // database den gelen veri
   const [userData, setUserData] = useState<User[] | undefined>(users);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [rowStateData, setRowStateData] = useState<rowStateDataType | null >(null)
-  const [rowStateIndex, setRowStateIndex] = useState<number | null | string>(null)
+  const [rowStateData, setRowStateData] = useState<rowStateDataType | null >(null);
+  const [rowStateIndex, setRowStateIndex] = useState<number | null | string>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     setMounted(true)
@@ -71,42 +71,42 @@ export default function UserList({ users }: Props) {
   if (!mounted) return
 
   const editValues = async () => {
-
-    if(rowStateData) {
-      const result = await onEditUser(rowStateData)
-
-
-      // işlem başarılı mı kontrol et 
-
-      // onGetUserList çağır gelen veriyi userData statetınde setle
-      
-      // toast mesajlarını ayarla
-
-      // modalıd kapat
-
-      console.log(result, 'result')
-
+    if (rowStateData) {
+      try {
+        const result = await onEditUser(rowStateData);
+  
+        if (result?.status === 200) {
+          const editingUsers = await onGetUserList();
+          setUserData(editingUsers?.data);
+          //console.log('ok');
+          
+          toast({
+            title: "Başarılı",
+            description: result?.message,
+          });
+          
+        } else {
+          toast({
+            title: "Hata!",
+            description: result?.message,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Hata",
+          description: 'Bir hata olustu',
+        });
+      } finally {
+        setOpenModal(false);
+      }
     }
-    // console.log(rowStateData, 'rowStateData')
-    // if (rowStateIndex === null) {
-    //   return
-    // }
-
-    // users[rowStateIndex] = rowStateData;
-    // setUserData(users)
-    // let data = rowStateData;
-
-    // Cookies.set('users', JSON.stringify(data));
-
-  }
+  };
+  
+  
 
   return (
     <div>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>My Title</title>
-      </Helmet>
-
       <Dialog open={openModal} onOpenChange={() => {
         setOpenModal(false)
       }}>
