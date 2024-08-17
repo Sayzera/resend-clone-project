@@ -1,4 +1,6 @@
 'use server';
+import { hashPassword } from "@/lib/bcrypt";
+import { client } from "@/lib/prisma";
 
 
 type onAddUserProps = {
@@ -16,8 +18,6 @@ type onEditUserProps = {
     age?: string;
     password?: string;
 }
-
-import { client } from "@/lib/prisma";
 
 
 export const onGetUserList = async () => {
@@ -53,6 +53,14 @@ export const onGetUserList = async () => {
  */
 export const onAddUser = async (data: onAddUserProps) => {
 
+
+    if(!data?.name || !data?.surname || !data?.email || !data?.age || !data?.password) {
+        return {
+            status: 400,
+            message: 'Bad request!',
+        }
+    }
+
     try {
         const existingUser = await client.user.findUnique({
             where: {
@@ -68,13 +76,16 @@ export const onAddUser = async (data: onAddUserProps) => {
             }
         }
 
+
+        const password = hashPassword(data.password);
+        
         const addUser = await client.user.create({
             data: {
                 name: data.name,
                 surname: data.surname,
                 age: Number(data.age),
                 email: data.email,
-                password: data.password,
+                password: password,
             }
         });
 
