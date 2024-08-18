@@ -107,8 +107,6 @@ export const onAddUser = async (data: onAddUserProps) => {
 
 export const onEditUser = async (data: onEditUserProps) => {
 
-    // WIP : Aynı email adresi eklenemesin
-
     let canBeEdited = true;
     const result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(data.email || '');
 
