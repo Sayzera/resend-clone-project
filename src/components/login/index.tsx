@@ -1,5 +1,6 @@
 "use client"
 
+import { client } from "@/lib/prisma";
 import { login } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
@@ -21,14 +22,46 @@ export function LoginForm() {
         password?: string
     } >({})
 
+    const [errorMessage, setErrorMessage] = useState<boolean>(true);
+
+    // function findUser async () => {
+
+    //   const existingUser = await client.user.findUnique({
+    //     where: {
+    //       email: formData?.email,
+    //   }
+
+    //   return existingUser;
+
+    // }
+    
 
     // WIP: validation yapılacak. 
 
     const onHandleLogin = async () => {
-        if(formData?.email && formData?.password) {
-            await login(formData);
-        }
-    }
+      const emailIsValid = /^([a-zA-Z0-9])+@(gmail|hotmail)\.com$/.test(
+        formData?.email || '' // sor
+      );
+
+      const passwordIsValid =
+        formData.password && formData?.password.length > 6 && formData?.password.length < 16;
+    
+      if (
+        formData.email &&
+        formData.password &&
+        formData.email.length > 0 &&
+        formData.email.length < 200 &&
+        emailIsValid &&
+        passwordIsValid
+      ) {
+        setErrorMessage(false);
+        await login(formData);
+      } else {
+        setErrorMessage(true);
+      }
+      console.log(errorMessage);
+      
+    };
 
 
 
@@ -72,6 +105,9 @@ export function LoginForm() {
             }
           } />
         </div>
+        <div className="text-red-600">
+          {errorMessage ? 'Login failed. Please check your account details.' : ''}
+          </div>
       </CardContent>
       <CardFooter>
         <Button className="w-full" onClick={onHandleLogin}>Login</Button>
