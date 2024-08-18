@@ -48,3 +48,13 @@
 
 
 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses
+
+* bcrypt
+- npm install bcrypt
+
+
+* iron-session
+- npm i iron-session
+
+* npx auth secret
+- .env-local oluşturuyor 

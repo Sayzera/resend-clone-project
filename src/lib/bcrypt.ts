@@ -9,4 +9,3 @@ export function hashPassword(password: string) {
 export function verifyPassword(password: string, hash: string) {
     return bcrypt.compareSync(password, hash);
 }
-

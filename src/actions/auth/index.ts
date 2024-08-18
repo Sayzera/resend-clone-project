@@ -1,7 +1,9 @@
 'use server'
 
-import { hashPassword, verifyPassword } from '@/lib/bcrypt'
+
+import { verifyPassword } from '@/lib/bcrypt'
 import { client } from '@/lib/prisma'
+import { getSession } from './session-action'
 
 
 interface loginDataProps {
@@ -9,7 +11,7 @@ interface loginDataProps {
     password?: string
 }
 
-export const login = async (data: loginDataProps) => {
+export const Login = async (data: loginDataProps) => {
 
     try {
         if (!data.email || !data.password) {
@@ -31,7 +33,7 @@ export const login = async (data: loginDataProps) => {
                 message: 'Kullanıcı adı veya şifre hatalı!'
             }
         }
-        
+
 
         // formdan alınan veriyi hasledim
 
@@ -43,6 +45,22 @@ export const login = async (data: loginDataProps) => {
                 message: 'Kullanıcı adı veya şifre hatalı!'
             }
         }
+
+        // session oluşturma
+        const session = await getSession();
+
+        session.isLoggedIn = true;
+        session.userId = existingEmail.id.toString();
+        session.userName = existingEmail.name;
+
+        await session.save();
+        
+        return {
+            status: 200,
+            message: 'Giriş başarılı!'
+        }
+
+
     } catch (e) {
         console.log('[login]', e)
     }

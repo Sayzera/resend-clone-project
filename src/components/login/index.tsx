@@ -1,7 +1,7 @@
 "use client"
 
 import { client } from "@/lib/prisma";
-import { login } from "@/actions/auth"
+import { Login } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -14,8 +14,10 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { useRouter } from "next/navigation";
 
 export function LoginForm() {
+  const router = useRouter();
     const [formData,setFormData] = useState<
     {
         email?: string
@@ -44,7 +46,7 @@ export function LoginForm() {
       );
 
       const passwordIsValid =
-        formData.password && formData?.password.length > 6 && formData?.password.length < 16;
+        formData.password && formData?.password.length >5 && formData?.password.length < 16;
     
       if (
         formData.email &&
@@ -55,7 +57,11 @@ export function LoginForm() {
         passwordIsValid
       ) {
         setErrorMessage(false);
-        await login(formData);
+        let result = await Login(formData);
+
+        if(result?.status === 200) {
+          router.push('/')
+        }
       } else {
         setErrorMessage(true);
       }
