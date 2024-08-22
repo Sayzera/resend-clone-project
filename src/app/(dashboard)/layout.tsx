@@ -5,7 +5,7 @@ import Settings from "@/components/settings";
 type DashboardLayoutProps = {
     children: React.ReactNode
 }
-export default function DashboardLayout({ children }: DashboardLayoutProps) { //children kavramini sor
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return (
         <>
             <div className="h-screen w-full bg-[#05050a] flex">
