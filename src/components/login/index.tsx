@@ -73,7 +73,7 @@ export function LoginForm() {
             Login
         </CardTitle>
         <CardDescription>
-          Enter your email below to create your account
+          Enter your email below to login to your account
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">

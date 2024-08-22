@@ -10,7 +10,7 @@ type Props = {}
 export default async function Home({}: Props) {
   const session = await getSession();
   if(!session.isLoggedIn) {
-    redirect('/login')
+    redirect('/users/register')
   }
  
   return (
