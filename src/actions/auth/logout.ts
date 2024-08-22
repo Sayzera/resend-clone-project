@@ -2,7 +2,9 @@
 
 import { defaultSession, SessionData, sessionOptions } from "@/lib/session";
 import { getIronSession } from "iron-session";
+
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function destroySession() {
     try {
@@ -10,9 +12,10 @@ export async function destroySession() {
         //session.isLoggedIn = defaultSession.isLoggedIn;
         //await session.save();
         session.destroy();
-        cookies().set('session', '', { expires: new Date(0) });
+        //cookies().set('session', '', { expires: new Date(0) });
 
         if (!session) {
+            redirect('/users/register');
             return {
                 success: 200,
                 message: 'Kullanici session i basariyla kaldirildi.'
