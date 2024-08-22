@@ -6,6 +6,15 @@ import Cookies from 'js-cookie'
 import ErrorMessage from "./error-message";
 import { onAddUser } from "@/actions/user";
 import { useToast } from "@/components/ui/use-toast"
+import { getSession } from "@/actions/auth/session-action";
+import { SessionData } from "@/lib/session";
+import { roles } from "@/constants/roles";
+import { Role } from "@prisma/client";
+
+
+ interface props {
+   session: SessionData
+ }
 
 export const getRegisterUserFromCookies = (name:string) => {
 
@@ -16,8 +25,13 @@ export const getRegisterUserFromCookies = (name:string) => {
    return [];
 }
 
-export default function UserRegister() {
+export default  function UserRegister({session}: props) {
    const { toast } = useToast()
+   let userRoles = roles[session.role as Role]
+
+ 
+   
+
 
    const [name, setName] = useState<string>('');
    const [surname, setSurname] = useState<string>('');
@@ -272,9 +286,16 @@ export default function UserRegister() {
                </div>
             </div>
             <div />
+            {
+              userRoles && userRoles?.length > 0 && userRoles.includes('CREATE') ? (
             <button disabled={!isFormValid()} type="submit" className="bg-blue-500 text-white p-2 rounded">
-               Register
-            </button>
+                  Register
+               </button>
+              ): (
+                  <div className="text-red-500">You are not authorized to perform this action.</div>
+              )
+            }
+            
          </form>
 
          {submitted && (

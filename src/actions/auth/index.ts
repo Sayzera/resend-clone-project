@@ -52,6 +52,7 @@ export const Login = async (data: loginDataProps) => {
         session.isLoggedIn = true;
         session.userId = existingEmail.id.toString();
         session.userName = existingEmail.name;
+        session.role = existingEmail.Role
 
         await session.save();
         

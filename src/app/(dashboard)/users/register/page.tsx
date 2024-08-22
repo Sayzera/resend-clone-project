@@ -1,12 +1,16 @@
+import { getSession } from '@/actions/auth/session-action';
 import UserRegister from '@/components/auth/register'
 import React from 'react'
 
 type Props = {}
 
-export default function ResgisterPage({}: Props) {
+export default async function ResgisterPage({}: Props) {
+  const session = await getSession();
+
+
   return (
     <div>
-        <UserRegister />
+        <UserRegister session={session} />
     </div>
   )
 }

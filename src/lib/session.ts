@@ -8,6 +8,7 @@ export interface SessionData {
 
 
     isLoggedIn?:boolean
+    role?:string
 }
 
 export const defaultSession:SessionData  = {
