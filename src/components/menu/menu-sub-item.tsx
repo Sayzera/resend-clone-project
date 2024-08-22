@@ -44,13 +44,29 @@ export default function MenuSubItem({
                     }}
                     className="text-gray-300">Register</DropdownMenuItem>
 
-
-
                 <DropdownMenuItem
                     onClick={() => {
                         router.push('/users/list')
                     }}
                     className="text-gray-300">User List</DropdownMenuItem>
+
+                <DropdownMenuItem
+                    onClick={() => {
+                        router.push('/login')
+                    }}
+                    className="text-gray-300">Login</DropdownMenuItem>
+
+                <DropdownMenuItem
+                    onClick={() => {
+                        router.push('/nots/register')
+                    }}
+                    className="text-gray-300">Add Notes</DropdownMenuItem>
+
+                <DropdownMenuItem
+                    onClick={() => {
+                        router.push('/nots/list')
+                    }}
+                    className="text-gray-300">Notes List</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     )
