@@ -1,6 +1,5 @@
 "use client"
 
-import { client } from "@/lib/prisma";
 import { Login } from "@/actions/auth"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,7 +23,7 @@ export function LoginForm() {
         password?: string
     } >({})
 
-    const [errorMessage, setErrorMessage] = useState<boolean>(true);
+    const [errorMessage, setErrorMessage] = useState<boolean>(false);
 
     // function findUser async () => {
 
@@ -37,12 +36,9 @@ export function LoginForm() {
 
     // }
     
-
-    // WIP: validation yapılacak. 
-
     const onHandleLogin = async () => {
       const emailIsValid = /^([a-zA-Z0-9])+@(gmail|hotmail)\.com$/.test(
-        formData?.email || '' // sor
+        formData?.email || ''
       );
 
       const passwordIsValid =
@@ -56,17 +52,16 @@ export function LoginForm() {
         emailIsValid &&
         passwordIsValid
       ) {
-        setErrorMessage(false);
         let result = await Login(formData);
 
         if(result?.status === 200) {
           router.push('/')
+        } else {
+          setErrorMessage(true);
         }
       } else {
         setErrorMessage(true);
       }
-      console.log(errorMessage);
-      
     };
 
 
