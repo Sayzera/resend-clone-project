@@ -2,8 +2,8 @@ import { Role } from "@prisma/client";
 
 export const roles = {
   [Role.ROLE_ADMIN]: ["CREATE", "READ", "UPDATE", "DELETE"],
-  ROLE_ASISTAN: ["CREATE", "READ", "UPDATE"],
-  ROLE_USER: ["READ"],
+  [Role.ROLE_ASISTAN]: ["CREATE", "READ", "UPDATE"],
+  [Role.ROLE_USER]: ["READ"],
 };
 
 

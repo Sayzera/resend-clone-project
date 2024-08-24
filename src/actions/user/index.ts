@@ -9,6 +9,7 @@ type onAddUserProps = {
     email: string;
     age: string;
     password: string;
+    role: string;
 }
 type onEditUserProps = {
     id?: string;
@@ -17,6 +18,7 @@ type onEditUserProps = {
     email?: string;
     age?: string;
     password?: string;
+    role?: string;
 }
 
 
@@ -54,7 +56,7 @@ export const onGetUserList = async () => {
 export const onAddUser = async (data: onAddUserProps) => {
 
 
-    if(!data?.name || !data?.surname || !data?.email || !data?.age || !data?.password) {
+    if(!data?.name || !data?.surname || !data?.email || !data?.age || !data?.password || !data?.role) {
         return {
             status: 400,
             message: 'Bad request!',
@@ -86,6 +88,7 @@ export const onAddUser = async (data: onAddUserProps) => {
                 age: Number(data.age),
                 email: data.email,
                 password: password,
+                // role: data.role
             }
         });
 
