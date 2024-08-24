@@ -1,16 +1,40 @@
-import React from 'react'
-// Settings
+'use client'
+
+import React, { useEffect, useState } from 'react';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { destroySession } from '@/actions/auth/logout';
+import { getSession } from '@/actions/auth/session-action';
+import { IronSession } from 'iron-session';
+import { SessionData } from '@/lib/session';
 
-type Props = {}
+function Settings({}) {
+    const [session, setSession] = useState<IronSession<SessionData> | null>(null);
+    useEffect(()=>{
+        const fetchSession = async () => {
+            try {
+                const sessionData = await getSession();
+                setSession(sessionData);
+            } catch {
+                console.log('error');
+            }
+        }
+        fetchSession();
+    }, []);
 
-function Settings({ }: Props) {
+    const destroySessionMethod = async () => {
+        try {
+            await destroySession();
+        } catch (error) {
+            console.error('Error during destroySession:', error);
+        }
+    }
+
     return (
         <div>
             <DropdownMenu >
@@ -21,13 +45,14 @@ function Settings({ }: Props) {
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                     </div>
-                    <span>example.gmail.com</span>
+                    <span>{session?.userName}</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className=" w-[200px] bg-[#05050a] border-gray-500 ">
                     <DropdownMenuItem className="text-gray-300">Profile</DropdownMenuItem>
                     <DropdownMenuItem className="text-gray-300">Billing</DropdownMenuItem>
                     <DropdownMenuItem className="text-gray-300">Team</DropdownMenuItem>
                     <DropdownMenuItem className="text-gray-300">Subscription</DropdownMenuItem>
+                    <DropdownMenuItem className="text-gray-300" onClick={destroySessionMethod}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
 

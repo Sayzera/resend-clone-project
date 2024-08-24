@@ -28,10 +28,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Cookies from 'js-cookie'
-import {Helmet} from "react-helmet";
 import ErrorMessage from "@/components/auth/register/error-message"
-
-type Props = {}
 
 type userItemType = {
   name: string;
@@ -51,7 +48,7 @@ type rowStateDataType =
     password?: string 
   } 
 
-export default function UserList({ }: Props) {
+export default function UserList({}) {
   const users = getRegisterUserFromCookies('users');
   const [mounted, setMounted] = useState<boolean>(false);
   const [userData, setUserData] = useState<userItemType[]>(users);
@@ -171,11 +168,6 @@ export default function UserList({ }: Props) {
 
   return (
     <div>
-    <Helmet>
-    <meta charSet="utf-8" />
-    <title>My Title</title>
-     </Helmet>
-
       <Dialog open={openModal} onOpenChange={() => {
         setOpenModal(false)
       }}>
@@ -261,7 +253,6 @@ export default function UserList({ }: Props) {
                     </div>
 
                   </div>
-
                   <Button disabled={!isFormValid()} variant={'primary'} className="w-full mt-2" onClick={editValues}>Edit</Button>
                 </>
               )}

@@ -6,38 +6,33 @@ import Cookies from 'js-cookie'
 import ErrorMessage from "./error-message";
 import { onAddUser } from "@/actions/user";
 import { useToast } from "@/components/ui/use-toast"
-import { getSession } from "@/actions/auth/session-action";
 import { SessionData } from "@/lib/session";
 import { roles } from "@/constants/roles";
 import { Role } from "@prisma/client";
 
-
- interface props {
+interface props {
    session: SessionData
- }
+}
 
-export const getRegisterUserFromCookies = (name:string) => {
+export const getRegisterUserFromCookies = (name: string) => {
 
-   let data = Cookies.get(name) 
-   if(data) {
+   let data = Cookies.get(name)
+   if (data) {
       return JSON.parse(data)
    }
    return [];
 }
 
-export default  function UserRegister({session}: props) {
+export default function UserRegister({ session }: props) {
    const { toast } = useToast()
-   let userRoles = roles[session.role as Role]
-
- 
-   
-
+   let userRoles = session && session.role ? roles[session.role as Role] : [];
 
    const [name, setName] = useState<string>('');
    const [surname, setSurname] = useState<string>('');
    const [age, setAge] = useState<string>('');
    const [email, setEmail] = useState<string>('');
    const [password, setPassword] = useState<string>('');
+   const [userRole, setUserRole] = useState<string>('');
    const [submitted, setSubmitted] = useState<boolean>(false);
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
@@ -51,16 +46,17 @@ export default  function UserRegister({session}: props) {
       surname: '',
       age: '',
       email: '',
-      password: ''
-  });
+      password: '',
+      userRole: ''
+   });
 
    const birkezDinle = () => {
       setIsLoading(true)
-    
+
       let clearSettimeout = setTimeout(() => {
-        setIsLoading(false)
+         setIsLoading(false)
       }, 2000);
- 
+
       return () => clearTimeout(clearSettimeout)
    }
 
@@ -70,6 +66,7 @@ export default  function UserRegister({session}: props) {
       setAge('');
       setEmail('');
       setPassword('');
+      setUserRole('');
       setSubmitted(false);
    }
 
@@ -83,7 +80,8 @@ export default  function UserRegister({session}: props) {
          surname,
          age,
          email,
-         password
+         password,
+         userRole
       });
       // register user  
       addRegisterUser();
@@ -105,25 +103,26 @@ export default  function UserRegister({session}: props) {
 
       // Cookies.set('users', JSON.stringify(data))
 
-     const result = await onAddUser({
-        name:name,
-        surname:surname,
-        age:age,
-        email:email,
-        password: password
+      const result = await onAddUser({
+         name: name,
+         surname: surname,
+         age: age,
+         email: email,
+         password: password,
+         role: userRole
       })
-      
 
-      if(result?.status === 200) {
+
+      if (result?.status === 200) {
          toast({
-          title: "Başarılı",
-          description: result.message,
-        }) 
+            title: "Başarılı",
+            description: result.message,
+         })
       } else {
          toast({
             title: "Hata!",
             description: result?.message,
-          }) 
+         })
       }
 
 
@@ -132,8 +131,8 @@ export default  function UserRegister({session}: props) {
 
    // name validation
    useEffect(() => {
-      if(name.length > 0) {
-         if(name.length < 2) {
+      if (name.length > 0) {
+         if (name.length < 2) {
             nameSetErrorMessage('Minimum 2 karakter girmelisiniz')
          } else if (name.length > 50) {
             nameSetErrorMessage('Maksimum 50 karakter girebilirsiniz')
@@ -143,12 +142,12 @@ export default  function UserRegister({session}: props) {
       } else {
          nameSetErrorMessage('')
       }
-   },[name])
+   }, [name])
 
    // surname validation
    useEffect(() => {
-      if(surname.length > 0) {
-         if(surname.length < 2) {
+      if (surname.length > 0) {
+         if (surname.length < 2) {
             surnameSetErrorMessage('Minimum 2 karakter girmelisiniz')
          } else if (surname.length > 50) {
             surnameSetErrorMessage('Maksimum 50 karakter girebilirsiniz')
@@ -158,24 +157,24 @@ export default  function UserRegister({session}: props) {
       } else {
          surnameSetErrorMessage('')
       }
-   },[surname])
+   }, [surname])
 
    // password validation
    useEffect(() => {
-      if(password.length > 0) {
-         if(password.length < 6) {
+      if (password.length > 0) {
+         if (password.length < 6) {
             setPasswordErrorMessage('Minimum 6 değer girmelisiniz')
-         } else if(password.length > 16) {
+         } else if (password.length > 16) {
             setPasswordErrorMessage('Maksimum 16 karakter girebilirsiniz')
          } else {
             setPasswordErrorMessage('')
          }
       }
-   },[password])
+   }, [password])
 
    // age validation
    useEffect(() => {
-      if(age.length > 0  && Number(age) < 18) {
+      if (age.length > 0 && Number(age) < 18) {
          ageSetErrorMessage('18 yaşından büyük olmalısınız')
       } else {
          ageSetErrorMessage('')
@@ -185,7 +184,7 @@ export default  function UserRegister({session}: props) {
    // email validation
    useEffect(() => {
       const result = /^([a-zA-Z]|[0-9])+\@(gmail|hotmail|)\.com$/.test(email)
-      if(!result && email.length > 0) {
+      if (!result && email.length > 0) {
          emailSetErrorMessage('Hatali')
       } else {
          emailSetErrorMessage('')
@@ -216,100 +215,115 @@ export default  function UserRegister({session}: props) {
    };
 
    return (
-    <Loader isLoading={isLoading}>
-        <div className="p-5">
-         <p className="justify-center align-middle flex">Account Registration Page</p>
-         <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-               <label className="block">Name:</label>
-               <input 
-                  type="text" 
-                  value={name} 
-                  onChange={(e) => setName(e.target.value)} 
-                  disabled={submitted}
-                  className="border p-2 w-full"
-               />
-               <div>
-                  {<ErrorMessage message={nameErrorMessage} />}
+      <Loader isLoading={isLoading}>
+         <div className="p-5">
+            <p className="justify-center align-middle flex">Account Registration Page</p>
+            <form onSubmit={handleSubmit}>
+               <div className="mb-4">
+                  <label className="block">Name:</label>
+                  <input
+                     type="text"
+                     value={name}
+                     onChange={(e) => setName(e.target.value)}
+                     disabled={submitted}
+                     className="border p-2 w-full"
+                  />
+                  <div>
+                     {<ErrorMessage message={nameErrorMessage} />}
+                  </div>
                </div>
-            </div>
-            <div className="mb-4">
-               <label className="block">Surname:</label>
-               <input 
-                  type="text" 
-                  value={surname} 
-                  disabled={submitted}
-                  onChange={(e) => setSurname(e.target.value)} 
-                  className="border p-2 w-full"
-               />
-               <div>
-               {<ErrorMessage message={surnameErrorMessage} />}
+               <div className="mb-4">
+                  <label className="block">Surname:</label>
+                  <input
+                     type="text"
+                     value={surname}
+                     disabled={submitted}
+                     onChange={(e) => setSurname(e.target.value)}
+                     className="border p-2 w-full"
+                  />
+                  <div>
+                     {<ErrorMessage message={surnameErrorMessage} />}
+                  </div>
                </div>
-            </div>
-            <div className="mb-4">
-               <label className="block">Age:</label>
-               <input 
-                  type="number" 
-                  value={age} 
-                  disabled={submitted}
-                  onChange={(e) => setAge(e.target.value)} 
-                  className="border p-2 w-full"
-               />
-                <div>
-                {<ErrorMessage message={ageErrorMessage} />}
+               <div className="mb-4">
+                  <label className="block">Age:</label>
+                  <input
+                     type="number"
+                     value={age}
+                     disabled={submitted}
+                     onChange={(e) => setAge(e.target.value)}
+                     className="border p-2 w-full"
+                  />
+                  <div>
+                     {<ErrorMessage message={ageErrorMessage} />}
+                  </div>
                </div>
-            </div>
-            <div className="mb-4">
-               <label className="block">Email:</label>
-               <input 
-                  type="email" 
-                  value={email} 
-                  disabled={submitted}
-                  onChange={(e) => setEmail(e.target.value)} 
-                  className="border p-2 w-full"
-               />
-                <div>
-                {<ErrorMessage message={emailErrorMessage || duplicateEmailErrorMessage} />}
+               <div className="mb-4">
+                  <label className="block">Email:</label>
+                  <input
+                     type="email"
+                     value={email}
+                     disabled={submitted}
+                     onChange={(e) => setEmail(e.target.value)}
+                     className="border p-2 w-full"
+                  />
+                  <div>
+                     {<ErrorMessage message={emailErrorMessage || duplicateEmailErrorMessage} />}
+                  </div>
                </div>
-            </div>
-            <div className="mb-4">
-               <label className="block">Password:</label>
-               <input 
-                  type="password" 
-                  disabled={submitted}
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  className="border p-2 w-full"
-               />
-               <div>
-               {<ErrorMessage message={passwordErrorMessage} />}
+               <div className="mb-4">
+                  <label className="block">Password:</label>
+                  <input
+                     type="password"
+                     disabled={submitted}
+                     value={password}
+                     onChange={(e) => setPassword(e.target.value)}
+                     className="border p-2 w-full"
+                  />
+                  <div>
+                     {<ErrorMessage message={passwordErrorMessage} />}
+                  </div>
                </div>
-            </div>
-            <div />
-            {
-              userRoles && userRoles?.length > 0 && userRoles.includes('CREATE') ? (
-            <button disabled={!isFormValid()} type="submit" className="bg-blue-500 text-white p-2 rounded">
-                  Register
-               </button>
-              ): (
-                  <div className="text-red-500">You are not authorized to perform this action.</div>
-              )
-            }
-            
-         </form>
+               <div className="mb-4">
+                  <label htmlFor="options">Choose a user role:</label>
+                  <select 
+                  id="options" 
+                  name="options"
+                  value={userRole}
+                  onChange={(e) => setUserRole(e.target.value)}
+                  disabled={submitted}
+                  >
+                     <option value="option1">ROLE_ADMIN</option>
+                     <option value="option2">ROLE_ASISTAN</option>
+                     <option value="option3">ROLE_USER</option>
+                  </select>
+               </div>
+               {/*TODO*/}
+               <div />
+               {
+                  userRoles && userRoles?.length > 0 && userRoles.includes('CREATE') ? (
+                     <button disabled={!isFormValid()} type="submit" className="bg-blue-500 text-white p-2 rounded">
+                        Register
+                     </button>
+                  ) : (
+                     <div className="text-red-500">You are not authorized to perform this action.</div>
+                  )
+               }
 
-         {submitted && (
-            <div className="mt-5">
-               <h2>Submitted Data:</h2>
-               <div>Name: {allInputFields.name}</div>
-               <div>Surname: {allInputFields.surname}</div>
-               <div>Age: {allInputFields.age}</div>
-               <div>Email: {allInputFields.email}</div>
-               <div>Password: {'*'.repeat(allInputFields.password.length)}</div>
-            </div>
-         )}
+            </form>
 
-      </div>
-    </Loader>
+            {submitted && (
+               <div className="mt-5">
+                  <h2>Submitted Data:</h2>
+                  <div>Name: {allInputFields.name}</div>
+                  <div>Surname: {allInputFields.surname}</div>
+                  <div>Age: {allInputFields.age}</div>
+                  <div>Email: {allInputFields.email}</div>
+                  <div>Password: {'*'.repeat(allInputFields.password.length)}</div>
+               </div>
+            )}
+
+         </div>
+      </Loader>
    );
 }
