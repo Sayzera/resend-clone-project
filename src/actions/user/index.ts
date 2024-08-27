@@ -1,7 +1,8 @@
 'use server';
+
 import { hashPassword } from "@/lib/bcrypt";
 import { client } from "@/lib/prisma";
-
+import { Role } from "@prisma/client";
 
 type onAddUserProps = {
     name: string;
@@ -20,7 +21,6 @@ type onEditUserProps = {
     password?: string;
     role?: string;
 }
-
 
 export const onGetUserList = async () => {
     try {
@@ -88,7 +88,7 @@ export const onAddUser = async (data: onAddUserProps) => {
                 age: Number(data.age),
                 email: data.email,
                 password: password,
-                // role: data.role
+                Role: data.role as Role
             }
         });
 

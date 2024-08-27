@@ -29,24 +29,24 @@ import { Input } from "@/components/ui/input"
 import { User } from "@prisma/client"
 import { onEditUser, onGetUserList } from "@/actions/user"
 import { useToast } from "@/components/ui/use-toast"
-
+import { getSession } from "@/actions/auth/session-action"
+import { SessionData } from "@/lib/session"
 
 type Props = {
   users: {
-    id: string;
-    name: string;
-    surname: string;
-    email: string;
-    age: number;
-    password: string;
+    id: string
+    name: string
+    surname: string
+    email: string
+    age: number
+    password: string
   }[] | undefined
 }
 
 type rowStateDataType =
   null |
   {
-
-    id?:string
+    id?: string
     name?: string
     surname?: string
     age?: string
@@ -54,19 +54,31 @@ type rowStateDataType =
     password?: string
   }
 
-
 export default function UserList({ users }: Props) {
   const [mounted, setMounted] = useState<boolean>(false);
   // database den gelen veri
   const [userData, setUserData] = useState<User[] | undefined>(users);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [rowStateData, setRowStateData] = useState<rowStateDataType | null >(null);
+  const [rowStateData, setRowStateData] = useState<rowStateDataType | null>(null);
   const [rowStateIndex, setRowStateIndex] = useState<number | null | string>(null);
   const { toast } = useToast();
+  const [session, setSession] = useState<SessionData | null>(null);
 
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const sessionData = await getSession();
+        setSession(sessionData);
+      } catch (error) {
+        console.error('Failed to fetch session:', error);
+      }
+    };
+    fetchSession();
+  }, []);
 
   if (!mounted) return
 
@@ -74,17 +86,17 @@ export default function UserList({ users }: Props) {
     if (rowStateData) {
       try {
         const result = await onEditUser(rowStateData);
-  
+
         if (result?.status === 200) {
           const editingUsers = await onGetUserList();
           setUserData(editingUsers?.data);
           //console.log('ok');
-          
+
           toast({
             title: "Başarılı",
             description: result?.message,
           });
-          
+
         } else {
           toast({
             title: "Hata!",
@@ -102,8 +114,6 @@ export default function UserList({ users }: Props) {
       }
     }
   };
-  
-  
 
   return (
     <div>
@@ -127,8 +137,6 @@ export default function UserList({ users }: Props) {
                             name: e.target.value
                           }))
                         }}
-
-
                       />
                     </div>
 
@@ -167,9 +175,7 @@ export default function UserList({ users }: Props) {
                         }}
                         value={rowStateData?.email} />
                     </div>
-
                   </div>
-
                   <Button variant={'primary'} className="w-full mt-2" onClick={editValues}>Edit</Button>
                 </>
               )}
@@ -190,7 +196,7 @@ export default function UserList({ users }: Props) {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">Name</TableHead>
-                <TableHead className="w-[100px]" >Surname</TableHead>
+                <TableHead className="w-[100px]">Surname</TableHead>
                 <TableHead className="w-[100px]">Age</TableHead>
                 <TableHead className="w-[150px]">Email</TableHead>
                 <TableHead className="w-[150px]">Password</TableHead>
@@ -199,10 +205,15 @@ export default function UserList({ users }: Props) {
             </TableHeader>
             <TableBody>
               {userData?.map((user: User, index: number) => (
-                <TableItem key={index} user={user} users={users} index={index} setUserData={setUserData}
+                <TableItem key={index}
+                  user={user}
+                  users={users}
+                  index={index}
+                  setUserData={setUserData}
                   setOpenModal={setOpenModal}
                   setRowStateData={setRowStateData}
                   setRowStateIndex={setRowStateIndex}
+                  session={session}
                 />
               ))}
             </TableBody>

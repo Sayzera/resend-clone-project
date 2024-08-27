@@ -26,7 +26,6 @@ export const getRegisterUserFromCookies = (name: string) => {
 export default function UserRegister({ session }: props) {
    const { toast } = useToast()
    let userRoles = session && session.role ? roles[session.role as Role] : [];
-
    const [name, setName] = useState<string>('');
    const [surname, setSurname] = useState<string>('');
    const [age, setAge] = useState<string>('');
@@ -112,7 +111,6 @@ export default function UserRegister({ session }: props) {
          role: userRole
       })
 
-
       if (result?.status === 200) {
          toast({
             title: "Başarılı",
@@ -124,9 +122,6 @@ export default function UserRegister({ session }: props) {
             description: result?.message,
          })
       }
-
-
-
    }
 
    // name validation
@@ -293,12 +288,11 @@ export default function UserRegister({ session }: props) {
                   onChange={(e) => setUserRole(e.target.value)}
                   disabled={submitted}
                   >
-                     <option value="option1">ROLE_ADMIN</option>
-                     <option value="option2">ROLE_ASISTAN</option>
-                     <option value="option3">ROLE_USER</option>
+                     <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                     <option value="ROLE_ASISTAN">ROLE_ASISTAN</option>
+                     <option value="ROLE_USER">ROLE_USER</option>
                   </select>
                </div>
-               {/*TODO*/}
                <div />
                {
                   userRoles && userRoles?.length > 0 && userRoles.includes('CREATE') ? (
@@ -309,10 +303,9 @@ export default function UserRegister({ session }: props) {
                      <div className="text-red-500">You are not authorized to perform this action.</div>
                   )
                }
-
             </form>
 
-            {submitted && (
+            {/* {submitted && (
                <div className="mt-5">
                   <h2>Submitted Data:</h2>
                   <div>Name: {allInputFields.name}</div>
@@ -321,7 +314,7 @@ export default function UserRegister({ session }: props) {
                   <div>Email: {allInputFields.email}</div>
                   <div>Password: {'*'.repeat(allInputFields.password.length)}</div>
                </div>
-            )}
+            )} */}
 
          </div>
       </Loader>

@@ -5,8 +5,6 @@ export interface SessionData {
     userId?:string
     userName?:string
     img?:string
-
-
     isLoggedIn?:boolean
     role?:string
 }
