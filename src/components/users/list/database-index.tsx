@@ -273,7 +273,7 @@ export default function UserList({}) {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">Name</TableHead>
-                <TableHead className="w-[100px]" >Surname</TableHead>
+                <TableHead className="w-[100px]">Surname</TableHead>
                 <TableHead className="w-[100px]">Age</TableHead>
                 <TableHead className="w-[150px]">Email</TableHead>
                 <TableHead className="w-[150px]">Password</TableHead>

@@ -1,3 +1,5 @@
+'use client'
+
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import {
     TableCell,
@@ -25,9 +27,9 @@ type Props = {
 
 export default function TableItem({ user, index, setUserData, users, setOpenModal, setRowStateData, setRowStateIndex, session }: Props) {
     const { name, surname, age, email, password, id } = user
-    let userRoles = session && session.role ? roles[session.role as Role] : [];
-
-    //TODO userRoles fix
+    //console.log('Session:', session);
+    let userRoles = session?.role && roles[session.role as Role] ? roles[session.role as Role] : [];
+    //console.log('User Roles:', userRoles);
 
     const deleteItem = async (id: string) => {
         // users.splice(index, 1)

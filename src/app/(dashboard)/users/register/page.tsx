@@ -7,7 +7,6 @@ type Props = {}
 export default async function ResgisterPage({}: Props) {
   const session = await getSession();
 
-
   return (
     <div>
         <UserRegister session={session} />
