@@ -48,10 +48,10 @@ function Settings({}) {
                     <span>{session?.userName}</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className=" w-[200px] bg-[#05050a] border-gray-500 ">
-                    <DropdownMenuItem className="text-gray-300">Profile</DropdownMenuItem>
+                    {/* <DropdownMenuItem className="text-gray-300">Profile</DropdownMenuItem>
                     <DropdownMenuItem className="text-gray-300">Billing</DropdownMenuItem>
                     <DropdownMenuItem className="text-gray-300">Team</DropdownMenuItem>
-                    <DropdownMenuItem className="text-gray-300">Subscription</DropdownMenuItem>
+                    <DropdownMenuItem className="text-gray-300">Subscription</DropdownMenuItem> */}
                     <DropdownMenuItem className="text-gray-300" onClick={destroySessionMethod}>Logout</DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

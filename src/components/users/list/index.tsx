@@ -78,7 +78,7 @@ export default function UserList({ users }: Props) {
       }
     };
     fetchSession();
-  }, []);
+  }, [session]);
 
   if (!mounted) return
 

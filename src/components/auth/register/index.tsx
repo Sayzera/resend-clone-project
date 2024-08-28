@@ -24,7 +24,7 @@ export const getRegisterUserFromCookies = (name: string) => {
 }
 
 export default function UserRegister({ session }: props) {
-   const { toast } = useToast()
+   const { toast } = useToast();
    let userRoles = session && session.role ? roles[session.role as Role] : [];
    const [name, setName] = useState<string>('');
    const [surname, setSurname] = useState<string>('');
@@ -315,7 +315,6 @@ export default function UserRegister({ session }: props) {
                   <div>Password: {'*'.repeat(allInputFields.password.length)}</div>
                </div>
             )} */}
-
          </div>
       </Loader>
    );
