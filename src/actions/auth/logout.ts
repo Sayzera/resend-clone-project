@@ -7,21 +7,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function destroySession() {
-    try {
         const session = await getIronSession<SessionData>(cookies(), sessionOptions);
         //session.isLoggedIn = defaultSession.isLoggedIn;
         //await session.save();
         session.destroy();
         //cookies().set('session', '', { expires: new Date(0) });
 
-        if (!session) {
-            redirect('/users/register');
-            return {
-                success: 200,
-                message: 'Kullanici session i basariyla kaldirildi.'
-            }
-        }
-    } catch (error) {
-        console.error('Session destroy error', error);
-    }
+        redirect('/users/register');
+
 }
