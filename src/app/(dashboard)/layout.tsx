@@ -1,11 +1,18 @@
+import { getSession } from "@/actions/auth/session-action";
 import Logo from "@/components/logo";
 import Menu from "@/components/menu";
 import Settings from "@/components/settings";
+import { redirect } from "next/navigation";
 
 type DashboardLayoutProps = {
     children: React.ReactNode
 }
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+export default async function DashboardLayout({ children }: DashboardLayoutProps) {
+    const session = await getSession();
+    if(!session.isLoggedIn) {
+      redirect('/login')
+    }
+   
     return (
         <>
             <div className="h-screen w-full bg-[#05050a] flex">

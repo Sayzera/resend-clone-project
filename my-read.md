@@ -58,3 +58,6 @@
 
 * npx auth secret
 - .env-local oluşturuyor 
+
+* middleware 
+- https://nextjs.org/docs/app/building-your-application/routing/middleware
