@@ -49,6 +49,15 @@ export default function ResgisterPage({ }: Props) {
     resetFields();
   }
 
+  const isFormValid = () => {
+    return (
+      !authorNameErrorMessage &&
+      !authorNoteErrorMessage &&
+      authorName.length > 0 &&
+      authorNote.length > 0
+    );
+  };
+
   useEffect(setLoader, [])
 
   useEffect(() => {
@@ -80,7 +89,6 @@ export default function ResgisterPage({ }: Props) {
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
                 className='border p-2 w-full'
-                required
               />
               <div>
                 {<ErrorMessage message={authorNameErrorMessage} />}
@@ -93,13 +101,12 @@ export default function ResgisterPage({ }: Props) {
                 value={authorNote}
                 onChange={(e) => setAuthorNote(e.target.value)}
                 className='border p-2 w-full'
-                required
               />
               <div>
                 {<ErrorMessage message={authorNoteErrorMessage} />}
               </div>
             </div>
-            <button type='submit' className="bg-blue-500 text-white p-2 rounded mt-2">Add Note</button>
+            <button disabled={!isFormValid()} type='submit' className="bg-blue-500 text-white p-2 rounded mt-2">Add Note</button>
           </div>
         </form>
       </div>
