@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Dispatch, SetStateAction, useState } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import {
     TableCell,
     TableRow,
@@ -11,7 +11,7 @@ import { FiEdit } from "react-icons/fi";
 import { User } from '@prisma/client';
 import { onDeleteUser, onGetByIdUser } from '@/actions/user';
 import { roles } from "@/constants/roles";
-import { Role } from "@prisma/client"
+import { Role } from "@prisma/client";
 import { SessionData } from '@/lib/session';
 
 type Props = {

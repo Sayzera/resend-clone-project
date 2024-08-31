@@ -23,14 +23,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { User } from "@prisma/client"
-import { onEditUser, onGetUserList } from "@/actions/user"
-import { useToast } from "@/components/ui/use-toast"
-import { getSession } from "@/actions/auth/session-action"
-import { SessionData } from "@/lib/session"
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { User } from "@prisma/client";
+import { onEditUser, onGetUserList } from "@/actions/user";
+import { useToast } from "@/components/ui/use-toast";
+import { getSession } from "@/actions/auth/session-action";
+import { SessionData } from "@/lib/session";
 
 type Props = {
   users: {
@@ -40,6 +40,7 @@ type Props = {
     email: string
     age: number
     password: string
+    Role?: string
   }[] | undefined
 }
 
@@ -52,6 +53,7 @@ type rowStateDataType =
     age?: string
     email?: string
     password?: string
+    Role?: string
   }
 
 export default function UserList({ users }: Props) {
@@ -122,7 +124,7 @@ export default function UserList({ users }: Props) {
       }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editing the User Details</DialogTitle>
+            <DialogTitle>Editing the User Details{rowStateData?.Role}</DialogTitle>
             <DialogDescription>
               {(
                 <>
@@ -175,6 +177,18 @@ export default function UserList({ users }: Props) {
                         }}
                         value={rowStateData?.email} />
                     </div>
+
+                    <div>
+                      <Label htmlFor="role">User Role</Label>
+                      <Input id='role' type="text"
+                        onChange={(e) => {
+                          setRowStateData((prev: rowStateDataType) => ({
+                            ...prev,
+                            Role: e.target.value
+                          }))
+                        }}
+                        value={rowStateData?.Role} />
+                    </div>
                   </div>
                   <Button variant={'primary'} className="w-full mt-2" onClick={editValues}>Edit</Button>
                 </>
@@ -188,7 +202,7 @@ export default function UserList({ users }: Props) {
         <CardHeader>
           <CardTitle>User List</CardTitle>
           <CardDescription>
-            Kayıt edilen kullanıcıları listeler
+            Kayıt edilen kullanıcıları listeler.
           </CardDescription>
         </CardHeader>
         <CardContent className="max-h-[500px] overflow-y-auto">

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Loader from "@/components/loader";
 import { useToast } from "@/components/ui/use-toast"
 import ErrorMessage from '@/components/auth/register/error-message';
+import { onAddNote } from '@/actions/nots';
 
 type Props = {}
 
@@ -44,9 +45,28 @@ export default function ResgisterPage({ }: Props) {
       authorName,
       authorNote
     });
-    // addRegisterNote();
+    addRegisterNote();
 
     resetFields();
+  }
+
+  const addRegisterNote = async () => {
+    const result = await onAddNote({
+      authorName: authorName,
+      authorNote: authorNote
+    })
+
+    if (result?.status === 200) {
+      toast({
+         title: "Başarılı",
+         description: result.message,
+      })
+   } else {
+      toast({
+         title: "Hata!",
+         description: result?.message,
+      })
+   }
   }
 
   const isFormValid = () => {
