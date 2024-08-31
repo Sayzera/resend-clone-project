@@ -54,8 +54,6 @@ export const onGetUserList = async () => {
  * @returns
  */
 export const onAddUser = async (data: onAddUserProps) => {
-
-
     if(!data?.name || !data?.surname || !data?.email || !data?.age || !data?.password || !data?.role) {
         return {
             status: 400,
@@ -195,17 +193,11 @@ export const onEditUser = async (data: onEditUserProps) => {
     } catch (error) {
         console.log('[onEditUser]', error)
     }
-
-
-
-
-
-
 }
 
 
 export const onDeleteUser = async (id: string) => {
-    if (!id) return
+    if (!id) return;
 
     try {
         // CRU[D]
@@ -220,7 +212,7 @@ export const onDeleteUser = async (id: string) => {
             return {
                 status: 404,
                 message: 'Kullanıcı bulunamadı',
-                data: isDeletedUser
+                data: []
             }
         }
 
@@ -228,15 +220,13 @@ export const onDeleteUser = async (id: string) => {
             return {
                 status: 200,
                 message: 'Kullanıcı başarıyla silindi',
-                data: isDeletedUser
+                data: isDeletedUser // sor
             }
         }
 
     } catch (error) {
         console.log('[onDeleteUser]', error)
     }
-
-
 }
 
 export const onGetByIdUser = async (id:string) => {

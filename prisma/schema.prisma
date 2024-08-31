@@ -28,3 +28,9 @@ model User {
   password String
   Role   Role @default(ROLE_USER)
 }
+
+model Note {
+  id String @id @default(cuid())
+  authorName String
+  authorNote String
+}

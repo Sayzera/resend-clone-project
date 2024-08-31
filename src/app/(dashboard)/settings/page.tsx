@@ -1,6 +1,4 @@
-
-
-export default async function SettingsPage() {
+export default function SettingsPage() {
 
   return (
     <div>Settings</div>

@@ -108,7 +108,7 @@ export default function UserRegister({ session }: props) {
          age: age,
          email: email,
          password: password,
-         role: userRole
+         role: userRole // sor
       })
 
       if (result?.status === 200) {
