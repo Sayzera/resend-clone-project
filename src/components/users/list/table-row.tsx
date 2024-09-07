@@ -39,10 +39,10 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
         //     setUserData(newUsersData)
         // }
 
-        const result = await onDeleteUser(id)
+        const result = await onDeleteUser(id);
 
         if (result?.status === 200) {
-            const newUsers = users?.filter((user) => user.id != id)
+            const newUsers = users?.filter((user) => user.id != id);
             setUserData(newUsers);
 
             // const users = await onGetUserList();
@@ -51,9 +51,9 @@ export default function TableItem({ user, index, setUserData, users, setOpenModa
     }
 
     const getById = async (id: string) => {
-        const result = await onGetByIdUser(id)
+        const result = await onGetByIdUser(id);
         if (result?.status == 200) {
-            setRowStateData(result?.data)
+            setRowStateData(result?.data);
         }
     }    
 
