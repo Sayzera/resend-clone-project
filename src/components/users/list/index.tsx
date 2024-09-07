@@ -180,14 +180,21 @@ export default function UserList({ users }: Props) {
 
                     <div>
                       <Label htmlFor="role">User Role</Label>
-                      <Input id='role' type="text"
+                      <select
+                        id="role"
+                        value={rowStateData?.Role}
                         onChange={(e) => {
                           setRowStateData((prev: rowStateDataType) => ({
                             ...prev,
                             Role: e.target.value
                           }))
                         }}
-                        value={rowStateData?.Role} />
+                        className="block w-full p-2 border rounded-md"
+                      >
+                        <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                        <option value="ROLE_ASISTAN">ROLE_ASISTAN</option>
+                        <option value="ROLE_USER">ROLE_USER</option>
+                      </select>
                     </div>
                   </div>
                   <Button variant={'primary'} className="w-full mt-2" onClick={editValues}>Edit</Button>
