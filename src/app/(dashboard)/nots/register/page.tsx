@@ -12,6 +12,9 @@ export default function ResgisterPage({ }: Props) {
 
   const [authorName, setAuthorName] = useState<string>('');
   const [authorNote, setAuthorNote] = useState<string>('');
+
+  const [file, setFile] = useState<File | null>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
   const [authorNameErrorMessage, setAuthorNameErrorMessage] = useState<string>('');
@@ -51,10 +54,14 @@ export default function ResgisterPage({ }: Props) {
   }
 
   const addRegisterNote = async () => {
+
+    const formData = new FormData();
+    formData.append('file', file || '');
+
     const result = await onAddNote({
       authorName: authorName,
-      authorNote: authorNote
-    })
+      authorNote: authorNote,
+    },formData)
 
     if (result?.status === 200) {
       toast({
@@ -126,6 +133,21 @@ export default function ResgisterPage({ }: Props) {
                 {<ErrorMessage message={authorNoteErrorMessage} />}
               </div>
             </div>
+
+
+            <div className='mb-4'>
+              <label className='block'>File:</label>
+              <input
+                type='file'
+                className='border p-2 w-full'
+                // multiple={true}
+                onChange={(e) => {
+                  setFile(e?.target?.files?.[0] || null)
+                }}
+              />
+            
+            </div>
+
             <button disabled={!isFormValid()} type='submit' className="bg-blue-500 text-white p-2 rounded mt-2">Add Note</button>
           </div>
         </form>

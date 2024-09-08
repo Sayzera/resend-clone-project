@@ -1,6 +1,8 @@
 'use server'
 
 import { client } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import fs from 'node:fs/promises'
 
 type onAddNoteProps = {
     authorName: string;
@@ -35,7 +37,58 @@ export const onGetNoteList = async () => {
     }
 }
 
-export const onAddNote = async (data: onAddNoteProps) => {
+export const onAddNote = async (data: onAddNoteProps, formData: FormData) => {
+
+
+    const file = formData.get('file') as File;
+
+    // UTF-8 olarak kodlama
+    const encoder = new TextEncoder();
+    const encodedFileName = encoder.encode(file.name);
+    const utf8FileName = new TextDecoder('utf-8').decode(encodedFileName);
+
+  
+    // ALLOWED FILE EXTENSIONS
+    const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'pdf']
+
+    // MAX_FILE_SIZE
+    const MAX_FILE_SIZE = 1024 * 1024 * 2 // 2MB
+
+    // Dosya var mı 
+    if(!file) {
+        return {
+            status: 400,
+            message: 'Dosya eksik.',
+        }
+    }
+
+    // Dosya uzantısı kontrol
+    const fileExtension = file.name.split('.').pop();
+
+    if(!fileExtension || !ALLOWED_EXTENSIONS.includes(fileExtension)) {
+        return {
+            status: 400,
+            message: 'Dosya uzantısı hatalı.',
+        }
+    }
+
+    if(file.size > MAX_FILE_SIZE) {
+        return {
+            status: 400,
+            message: 'Dosya boyutu 5MB\'dan fazla olamaz.',
+        }
+    }
+
+    // ArrayBuffer Uint8Array e dönüştürme
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+
+
+    const filePathName = `public/uploads/${utf8FileName}`
+
+    // Dosyayı kaydet
+    await fs.writeFile( filePathName, buffer);
+
     if (!data?.authorName || !data?.authorNote) {
         return {
             status: 400,
@@ -47,9 +100,13 @@ export const onAddNote = async (data: onAddNoteProps) => {
         const addNote = await client.note.create({
             data: {
                 authorName: data.authorName,
-                authorNote: data.authorNote
+                authorNote: data.authorNote,
+                filePath: filePathName
             }
         });
+
+        revalidatePath('/nots/list'); // SPECIFIC PATH
+        // revalidatePath('/') ALL PATHS
         
         return {
             status: 200,

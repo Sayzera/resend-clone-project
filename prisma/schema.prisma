@@ -33,4 +33,5 @@ model Note {
   id String @id @default(cuid())
   authorName String
   authorNote String
+  filePath String @default("")
 }

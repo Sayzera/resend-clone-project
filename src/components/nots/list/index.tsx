@@ -29,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { onDeleteNote, onEditNote, onGetNoteList } from "@/actions/nots";
+import Image from "next/image";
 
 type Props = {
   notes:
@@ -39,6 +40,7 @@ type Props = {
       id: string;
       authorName: string;
       authorNote: string;
+      filePath: string;
     }[];
   }
   | undefined;
@@ -50,6 +52,7 @@ type rowDataType =
     id?: string
     authorName?: string
     authorNote?: string
+    filePath?: string
   }
 
 function NotsList({ notes }: Props) {
@@ -60,6 +63,7 @@ function NotsList({ notes }: Props) {
     id: "",
     authorName: "",
     authorNote: "",
+    filePath: "",
   });
 
   if (!allData) return <div>Loading</div>;
@@ -166,6 +170,7 @@ function NotsList({ notes }: Props) {
               <TableRow>
                 <TableHead className="w-[100px]">Author Name</TableHead>
                 <TableHead>Author Note</TableHead>
+                <TableHead>File</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -174,6 +179,11 @@ function NotsList({ notes }: Props) {
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.authorName}</TableCell>
                   <TableCell>{item.authorNote}</TableCell>
+                  <TableCell>
+                    <Image src={item.filePath.replace('public','')} alt={item.authorName} 
+                   objectFit="contain" width={100} height={100}
+                    />
+                  </TableCell>
                   <TableCell>
                     <Button
                       size={"sm"}
