@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Table,
@@ -21,7 +21,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -33,29 +33,28 @@ import Image from "next/image";
 
 type Props = {
   notes:
-  | {
-    status: number;
-    message: string;
-    data: {
-      id: string;
-      authorName: string;
-      authorNote: string;
-      filePath: string;
-    }[];
-  }
-  | undefined;
-}
+    | {
+        status: number;
+        message: string;
+        data: {
+          id: string;
+          authorName: string;
+          authorNote: string;
+          filePath: string;
+        }[];
+      }
+    | undefined;
+};
 
-type rowDataType =
-  null |
-  {
-    id?: string
-    authorName?: string
-    authorNote?: string
-    filePath?: string
-  }
+type rowDataType = null | {
+  id?: string;
+  authorName?: string;
+  authorNote?: string;
+  filePath?: string;
+};
 
 function NotsList({ notes }: Props) {
+  const [file, setFile] = useState<File | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [allData, setAllData] = useState(notes?.data);
   const { toast } = useToast();
@@ -71,8 +70,11 @@ function NotsList({ notes }: Props) {
   const editValues = async () => {
     if (rowData) {
       try {
-        const result = await onEditNote(rowData);
-
+        const formData = new FormData();
+        formData.append("file", file || "");
+    
+        const result = await onEditNote(rowData, formData);
+       
         if (result?.status === 200) {
           const editingValues = await onGetNoteList();
           setAllData(editingValues?.data);
@@ -81,7 +83,6 @@ function NotsList({ notes }: Props) {
             title: "Başarılı",
             description: result?.message,
           });
-
         } else {
           toast({
             title: "Hata!",
@@ -92,22 +93,22 @@ function NotsList({ notes }: Props) {
         console.error(e);
         toast({
           title: "Hata",
-          description: 'Bir hata olustu',
+          description: "Bir hata olustu",
         });
       } finally {
         setOpenModal(false);
       }
     }
-  }
+  };
 
-  const deleteNote = async (id: string) => {
-    const result = await onDeleteNote(id);
+  const deleteNote = async (id: string, filePath: string) => {
+    const result = await onDeleteNote(id, filePath);
 
     if (result?.status === 200) {
       const newItems = allData?.filter((item) => item.id != id);
       setAllData(newItems);
     }
-  }
+  };
 
   return (
     <div>
@@ -146,6 +147,28 @@ function NotsList({ notes }: Props) {
                     }}
                   />
                 </div>
+
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <label className="block">File:</label>
+                    <input
+                      type="file"
+                      className="border p-2 w-full"
+                      // multiple={true}
+                      onChange={(e) => {
+                        setFile(e?.target?.files?.[0] || null);
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <img 
+                     width={200}
+                     height={200}
+                     className="rounded-full border border-black ml-2"
+                    src={rowData?.filePath?.replace('public','')} />
+                  </div>
+                </div>
               </div>
               <Button
                 variant={"primary"}
@@ -177,17 +200,23 @@ function NotsList({ notes }: Props) {
             <TableBody>
               {allData?.map((item) => (
                 <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.authorName}</TableCell>
+                  <TableCell className="font-medium">
+                    {item.authorName}
+                  </TableCell>
                   <TableCell>{item.authorNote}</TableCell>
                   <TableCell>
-                    <Image src={item.filePath.replace('public','')} alt={item.authorName} 
-                   objectFit="contain" width={100} height={100}
+                    <Image
+                      src={item.filePath.replace("public", "")}
+                      alt={item.authorName}
+                      objectFit="contain"
+                      width={100}
+                      height={100}
                     />
                   </TableCell>
                   <TableCell>
                     <Button
                       size={"sm"}
-                      style={{marginRight: "1rem"}}
+                      style={{ marginRight: "1rem" }}
                       onClick={() => {
                         setRowData(item);
                         setOpenModal(true);
@@ -197,8 +226,12 @@ function NotsList({ notes }: Props) {
                     </Button>
                     <Button
                       size={"sm"}
-                      onClick={() => {deleteNote(item.id)}}
-                      >Delete</Button>
+                      onClick={() => {
+                        deleteNote(item.id, item.filePath);
+                      }}
+                    >
+                      Delete
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
