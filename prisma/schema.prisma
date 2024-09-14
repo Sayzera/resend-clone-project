@@ -19,6 +19,19 @@ enum Role {
     ROLE_ASISTAN
 }
 
+
+model Note {
+  id String @id @default(cuid())
+  authorName String
+  authorNote String
+  filePath String @default("")
+  status Boolean @default(true)
+
+  userId String 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
 model User {
   id       String @id @default(cuid())
   name     String
@@ -27,11 +40,9 @@ model User {
   age      Int
   password String
   Role   Role @default(ROLE_USER)
+
+  notes Note[]
+ 
 }
 
-model Note {
-  id String @id @default(cuid())
-  authorName String
-  authorNote String
-  filePath String @default("")
-}
+

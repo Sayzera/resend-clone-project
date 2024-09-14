@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { onDeleteNote, onEditNote, onGetNoteList } from "@/actions/nots";
 import Image from "next/image";
+import { Role } from "@prisma/client";
 
 type Props = {
   notes:
@@ -41,6 +42,15 @@ type Props = {
           authorName: string;
           authorNote: string;
           filePath: string;
+          user: {
+            id: string;
+            name: string;
+            surname: string;
+            email: string;
+            age: number;
+            password: string;
+            Role: Role;
+        };
         }[];
       }
     | undefined;
@@ -51,6 +61,15 @@ type rowDataType = null | {
   authorName?: string;
   authorNote?: string;
   filePath?: string;
+  user?: {
+    id: string;
+    name: string;
+    surname: string;
+    email: string;
+    age: number;
+    password: string;
+    Role: Role;
+};
 };
 
 function NotsList({ notes }: Props) {
@@ -201,7 +220,7 @@ function NotsList({ notes }: Props) {
               {allData?.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">
-                    {item.authorName}
+                    {item.authorName} - {item.user?.name}
                   </TableCell>
                   <TableCell>{item.authorNote}</TableCell>
                   <TableCell>

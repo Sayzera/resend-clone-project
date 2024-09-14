@@ -4,6 +4,7 @@ import { existsFile, uploadFile } from "@/lib/fileFunctions";
 import { client } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import fs from "node:fs/promises";
+import { getSession } from "../auth/session-action";
 
 type onAddNoteProps = {
   authorName: string;
@@ -19,7 +20,26 @@ type onEditNoteProps = {
 
 export const onGetNoteList = async () => {
   try {
-    const noteList = await client.note.findMany({});
+    const noteList = await client.note.findMany({
+      where: {
+        status: true
+      },
+      include: {
+        user: true
+        // user: {
+        //   select: {
+        //     name:true
+        //   }
+        // }
+      }
+    });
+
+    // SELECT *
+    // FROM table1
+    // LEFT JOIN table2 t2
+    // ON table1.column_name = table2.column_name;
+
+  
 
     if (noteList) {
       return {
@@ -41,6 +61,8 @@ export const onGetNoteList = async () => {
 
 export const onAddNote = async (data: onAddNoteProps, formData: FormData) => {
   const file = formData.get("file") as File;
+  const session = await getSession();
+
 
   const filePathName = await uploadFile(file, "public/uploads");
 
@@ -56,11 +78,13 @@ export const onAddNote = async (data: onAddNoteProps, formData: FormData) => {
   }
 
   try {
+
     const addNote = await client.note.create({
       data: {
         authorName: data.authorName,
         authorNote: data.authorNote,
         filePath: filePathName?.filePathName || "",
+        userId:session.userId!
       },
     });
 

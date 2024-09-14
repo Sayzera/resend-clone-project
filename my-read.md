@@ -44,6 +44,7 @@
 - npx prisma init [2]
 - npx prisma generate [kodları aldıktan sonra]
 - npx prisma db push  [kodları aldıktan sonra]
+- npx prisma migrate reset
 - npx prisma studio
 
 

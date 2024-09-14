@@ -31,7 +31,7 @@ export default function UserRegister({ session }: props) {
    const [age, setAge] = useState<string>('');
    const [email, setEmail] = useState<string>('');
    const [password, setPassword] = useState<string>('');
-   const [userRole, setUserRole] = useState<string>('');
+   const [userRole, setUserRole] = useState<string>('ROLE_ADMIN');
    const [submitted, setSubmitted] = useState<boolean>(false);
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [passwordErrorMessage, setPasswordErrorMessage] = useState<string>('');
