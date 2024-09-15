@@ -3,6 +3,8 @@ import { Inter as FontSans } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
 
 import { cn } from "@/lib/utils"
+import 'rsuite/dist/rsuite.min.css';
+
 
 const fontSans = FontSans({
   subsets: ["latin"],

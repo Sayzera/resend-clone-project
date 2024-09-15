@@ -29,6 +29,25 @@ model Note {
 
   userId String 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  notesLinkedToNotes NotesLinkedToNotes[]
+} 
+
+model NotesLinkedToNotes {
+  id String @id @default(cuid())
+  comment String 
+
+  noteId String
+  note Note @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  isTargetAchieved Boolean @default(false)
+
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  status Boolean @default(true)
+  createdBy String
+  updatedBy String
+
 }
 
 

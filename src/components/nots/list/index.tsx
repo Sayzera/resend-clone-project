@@ -31,6 +31,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { onDeleteNote, onEditNote, onGetNoteList } from "@/actions/nots";
 import Image from "next/image";
 import { Role } from "@prisma/client";
+import AddSimilarNote from "./add-similar-note";
+import TimeLine from "./time-line";
+import { onGetNotesLinkedToNotes } from "@/actions/notes-linked-to-notes";
 
 type Props = {
   notes:
@@ -50,7 +53,7 @@ type Props = {
             age: number;
             password: string;
             Role: Role;
-        };
+          };
         }[];
       }
     | undefined;
@@ -69,10 +72,14 @@ type rowDataType = null | {
     age: number;
     password: string;
     Role: Role;
-};
+  };
 };
 
+
+
 function NotsList({ notes }: Props) {
+  const [openAddSimilarNote, setOpenAddSimilarNote] = useState<boolean>(false);
+
   const [file, setFile] = useState<File | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [allData, setAllData] = useState(notes?.data);
@@ -83,6 +90,9 @@ function NotsList({ notes }: Props) {
     authorNote: "",
     filePath: "",
   });
+  
+
+  const [comments, setComments] = useState<any>();
 
   if (!allData) return <div>Loading</div>;
 
@@ -91,9 +101,9 @@ function NotsList({ notes }: Props) {
       try {
         const formData = new FormData();
         formData.append("file", file || "");
-    
+
         const result = await onEditNote(rowData, formData);
-       
+
         if (result?.status === 200) {
           const editingValues = await onGetNoteList();
           setAllData(editingValues?.data);
@@ -128,6 +138,15 @@ function NotsList({ notes }: Props) {
       setAllData(newItems);
     }
   };
+
+
+  const onGetCommentList = async (noteId: string) => {
+    const result = await onGetNotesLinkedToNotes(noteId);
+    
+   
+   
+  }
+
 
   return (
     <div>
@@ -181,11 +200,12 @@ function NotsList({ notes }: Props) {
                   </div>
 
                   <div>
-                    <img 
-                     width={200}
-                     height={200}
-                     className="rounded-full border border-black ml-2"
-                    src={rowData?.filePath?.replace('public','')} />
+                    <img
+                      width={200}
+                      height={200}
+                      className="rounded-full border border-black ml-2"
+                      src={rowData?.filePath?.replace("public", "")}
+                    />
                   </div>
                 </div>
               </div>
@@ -200,6 +220,11 @@ function NotsList({ notes }: Props) {
           </DialogHeader>
         </DialogContent>
       </Dialog>
+      <AddSimilarNote
+        open={openAddSimilarNote}
+        setOpen={setOpenAddSimilarNote}
+        noteId={rowData?.id!}
+      />
 
       <Card>
         <CardHeader>
@@ -207,55 +232,81 @@ function NotsList({ notes }: Props) {
           <CardDescription>Yazar ve notlarını listeler.</CardDescription>
         </CardHeader>
         <CardContent className="max-h-[500px] overflow-y-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Author Name</TableHead>
-                <TableHead>Author Note</TableHead>
-                <TableHead>File</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {allData?.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">
-                    {item.authorName} - {item.user?.name}
-                  </TableCell>
-                  <TableCell>{item.authorNote}</TableCell>
-                  <TableCell>
-                    <Image
-                      src={item.filePath.replace("public", "")}
-                      alt={item.authorName}
-                      objectFit="contain"
-                      width={100}
-                      height={100}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      size={"sm"}
-                      style={{ marginRight: "1rem" }}
-                      onClick={() => {
-                        setRowData(item);
-                        setOpenModal(true);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size={"sm"}
-                      onClick={() => {
-                        deleteNote(item.id, item.filePath);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <div className="flex space-x-2">
+            <div className="w-full">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Author Name</TableHead>
+                    <TableHead>Author Note</TableHead>
+                    <TableHead>File</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {allData?.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium">
+                        {item.authorName} - {item.user?.name}
+                      </TableCell>
+                      <TableCell>{item.authorNote}</TableCell>
+                      <TableCell>
+                        <Image
+                          src={item.filePath.replace("public", "")}
+                          alt={item.authorName}
+                          objectFit="contain"
+                          width={100}
+                          height={100}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          size={"sm"}
+                          style={{ marginRight: "1rem" }}
+                          onClick={() => {
+                            setRowData(item);
+                            setOpenAddSimilarNote(true);
+                          }}
+                        >
+                          Add Comment
+                        </Button>
+                        <Button
+                          size={"sm"}
+                          style={{ marginRight: "1rem" }}
+                          onClick={() => {
+                            onGetCommentList(item.id)
+                          }}
+                        >
+                         Show Comments
+                        </Button>
+                        <Button
+                          size={"sm"}
+                          style={{ marginRight: "1rem" }}
+                          onClick={() => {
+                            setRowData(item);
+                            setOpenModal(true);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          size={"sm"}
+                          onClick={() => {
+                            deleteNote(item.id, item.filePath);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            <div className="w-full flex pl-10">
+              <TimeLine />
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>
