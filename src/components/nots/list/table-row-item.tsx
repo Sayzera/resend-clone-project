@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import Image from "next/image";
+import { useParams,useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { CiBoxList, CiEdit, CiSquarePlus } from "react-icons/ci";
 import { MdOutlineDelete } from "react-icons/md";
@@ -31,8 +32,25 @@ function TableRowItem({
   setOpenModal,
   deleteNote,
   openTimeLineHandler,
+   
 }: Props) {
     const [openTimeLine, setOpenTimeLine] =useState(false);
+
+    const searchParams= useSearchParams();
+    const id = searchParams.get("id");
+
+
+
+    function updateUrlParameter(param: string, value: string) {
+        // Mevcut URL'yi alın
+        const url = new URL(window.location.href);
+      
+        // Parametreyi güncelleyin veya ekleyin
+        url.searchParams.set(param, value);
+      
+        // Güncellenmiş URL'yi tarayıcıya yansıtın
+        window.history.pushState({}, '', url.toString());
+      }
   return (
     <TableRow key={item.id}>
       <TableCell className="font-medium">
@@ -61,13 +79,23 @@ function TableRowItem({
         </Button>
         <Button
           size={"icon"}
-          className={openTimeLine ? "bg-gray-300" : "bg-gray-800"}
+          className={openTimeLine && id == item.id ? "bg-gray-300" : "bg-gray-800"}
           style={{ marginRight: "1rem" }}
           onClick={() => {
             onGetCommentList(item.id);
-            setOpenTimeLine(!openTimeLine);
-     
-            openTimeLineHandler(!openTimeLine);
+            updateUrlParameter("id", item.id);
+
+            setOpenTimeLine(true);
+            openTimeLineHandler(true);
+
+          
+            if(openTimeLine && id == item.id){
+                setOpenTimeLine(false);
+                openTimeLineHandler(false);
+            }
+
+
+            
           }}
         >
           <CiBoxList className="size-5" />
