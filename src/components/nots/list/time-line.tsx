@@ -1,47 +1,85 @@
-import { Timeline } from 'rsuite';
-import CreditCardIcon from '@rsuite/icons/legacy/CreditCard';
-import PlaneIcon from '@rsuite/icons/legacy/Plane';
-import TruckIcon from '@rsuite/icons/legacy/Truck';
-import UserIcon from '@rsuite/icons/legacy/User';
-import CheckIcon from '@rsuite/icons/legacy/Check';
+import { Timeline } from "rsuite";
+import CreditCardIcon from "@rsuite/icons/legacy/CreditCard";
+import PlaneIcon from "@rsuite/icons/legacy/Plane";
+import TruckIcon from "@rsuite/icons/legacy/Truck";
+import UserIcon from "@rsuite/icons/legacy/User";
+import CheckIcon from "@rsuite/icons/legacy/Check";
+import { GrClose } from "react-icons/gr";
+import { Checkbox } from "@/components/ui/checkbox"
+import { changeStatusNoteLinkedToNote } from "@/actions/notes-linked-to-notes";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const TimeLine = () => (
-  <Timeline className="custom-timeline">
-    <Timeline.Item dot={<CreditCardIcon />}>
-      <p>March 1, 10:20</p>
-      <p>Your order starts processing</p>
-    </Timeline.Item>
-    <Timeline.Item>
-      <p>March 1, 11:34</p>
-      <p>The package really waits for the company to pick up the goods</p>
-    </Timeline.Item>
-    <Timeline.Item>
-      <p>March 1, 16:20</p>
-      <p>[Packed]</p>
-      <p>Beijing company has received the shipment</p>
-    </Timeline.Item>
-    <Timeline.Item dot={<PlaneIcon />}>
-      <p>March 2, 06:12</p>
-      <p>[In transit]</p>
-      <p>Order has been shipped from Beijing to Shanghai</p>
-    </Timeline.Item>
-    <Timeline.Item dot={<TruckIcon />}>
-      <p>March 2, 09:20</p>
-      <p>[In transit]</p>
-      <p>Sended from the Shanghai Container Center to the distribution center</p>
-    </Timeline.Item>
-    <Timeline.Item dot={<UserIcon />}>
-      <p>March 3, 14:20</p>
-      <p>[Delivery]</p>
-      <p>Shanghai Hongkou District Company Deliverer: Mr. Li, currently sending you a shipment</p>
-    </Timeline.Item>
-    <Timeline.Item dot={<CheckIcon style={{ background: '#15b215', color: '#fff' }} />}>
-      <p>March 3, 17:50</p>
-      <p>[Received]]</p>
-      <p>Your courier has arrived and the signer is the front desk</p>
-    </Timeline.Item>
-  </Timeline>
-);
+interface TimeLineProps {
+  data: {
+    comment: string;
+    createdBy: string;
+    id: string;
+    isTargetAchieved: boolean;
+    status: string;
+  }[];
+}
 
+const TimeLine = ({ data }: TimeLineProps) => {
+  const router = useRouter()
+  const [
+    timeItem, setTimeItem
+  ] = useState<
+    {
+      [key:string]: any
+    }
+  >({});
+  const changeStatus = async (id:string, status:boolean) => {
+    await changeStatusNoteLinkedToNote(id, status)
+    router.refresh()
+  }
+  
+
+  useEffect(() => {
+    data?.map((item) => {
+      setTimeItem((prev) => ({
+        ...prev,
+        [item.id]: item.isTargetAchieved
+      }))
+    })
+  }, [data])
+
+
+  return (
+    <Timeline className="custom-timeline w-full">
+      {data?.map((item, index) => (
+        <Timeline.Item
+          key={item.id}
+          dot={
+             timeItem[item.id]
+            ? (
+              <CheckIcon style={{ color: "green" }} />
+            ) : (
+              <GrClose style={{ color: "red" }} />
+            )
+          }
+        >
+          <div className="flex items-center justify-between w-full">
+            <p>{item.comment}</p>
+
+            <div>
+            <Checkbox
+                checked={timeItem[item.id]}
+               onCheckedChange={(e) => {
+                  changeStatus(item.id, e as boolean)
+                  setTimeItem((prev) =>({
+                    ...prev,
+                    [item.id]: e
+                  }))
+               }}
+            />
+
+            </div>
+          </div>
+        </Timeline.Item>
+      ))}
+    </Timeline>
+  );
+};
 
 export default TimeLine;

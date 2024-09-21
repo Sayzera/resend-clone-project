@@ -1,6 +1,7 @@
 'use server';
 import { client } from "@/lib/prisma";
 import { getSession } from "../auth/session-action";
+import { revalidatePath } from "next/cache";
 
 type onAddNoteLinkedToNoteProps = {
     comment: string;
@@ -109,3 +110,45 @@ export const onAddNoteLinkedToNote = async (data:onAddNoteLinkedToNoteProps) => 
   
     
 }
+
+export const changeStatusNoteLinkedToNote = async (id: string, status:boolean) => {
+    const session = await getSession();
+    if(!session) return;
+
+
+    if(id == '' ) {
+        return null
+    }
+
+
+    try {
+        const noteLinkedToNote = await client.notesLinkedToNotes.update({
+            where: {
+                id:id
+            },
+            data: {
+                isTargetAchieved: status 
+            }
+        })
+
+        if(!noteLinkedToNote) {
+            return {
+                status: 400,
+                message: 'Not durumu değiştirilemedi',
+            }
+        }
+
+         revalidatePath('/')
+        
+
+        return {
+            status: 200,
+            message: 'Not durumu başarıyla değiştirildi',
+        }
+    }catch(e) {
+        console.log('[changeStatusNoteLinkedToNote]', e)
+    }
+
+
+
+ }

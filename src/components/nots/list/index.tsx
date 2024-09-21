@@ -34,6 +34,9 @@ import { Role } from "@prisma/client";
 import AddSimilarNote from "./add-similar-note";
 import TimeLine from "./time-line";
 import { onGetNotesLinkedToNotes } from "@/actions/notes-linked-to-notes";
+import { CiSquarePlus,CiBoxList,CiEdit  } from "react-icons/ci";
+import { MdOutlineDelete } from "react-icons/md";
+import TableRowItem from "./table-row-item";
 
 type Props = {
   notes:
@@ -78,6 +81,7 @@ type rowDataType = null | {
 
 
 function NotsList({ notes }: Props) {
+  const [openTimeLine, setOpenTimeLine] = useState<boolean>(false);
   const [openAddSimilarNote, setOpenAddSimilarNote] = useState<boolean>(false);
 
   const [file, setFile] = useState<File | null>(null);
@@ -139,14 +143,37 @@ function NotsList({ notes }: Props) {
     }
   };
 
-
   const onGetCommentList = async (noteId: string) => {
-    const result = await onGetNotesLinkedToNotes(noteId);
+    const result: {
+      data: {
+        notesLinkedToNotes: {
+          comment: string;
+          createdBy: string;
+          id: string;
+          isTargetAchieved: boolean;
+          status: string;
+        }[]
+      }
+      status: number;
+    } = await onGetNotesLinkedToNotes(noteId);
     
-   
-   
+    if(result?.status === 200) {
+      const data = result?.data?.notesLinkedToNotes
+      
+      setComments(data)
+
+    } else {
+      setComments([])
+    }
+
+  
+
   }
 
+
+  const openTimeLineHandler = (isOpen:boolean) => {
+     setOpenTimeLine(isOpen)
+  }
 
   return (
     <div>
@@ -245,67 +272,34 @@ function NotsList({ notes }: Props) {
                 </TableHeader>
                 <TableBody>
                   {allData?.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-medium">
-                        {item.authorName} - {item.user?.name}
-                      </TableCell>
-                      <TableCell>{item.authorNote}</TableCell>
-                      <TableCell>
-                        <Image
-                          src={item.filePath.replace("public", "")}
-                          alt={item.authorName}
-                          objectFit="contain"
-                          width={100}
-                          height={100}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          size={"sm"}
-                          style={{ marginRight: "1rem" }}
-                          onClick={() => {
-                            setRowData(item);
-                            setOpenAddSimilarNote(true);
-                          }}
-                        >
-                          Add Comment
-                        </Button>
-                        <Button
-                          size={"sm"}
-                          style={{ marginRight: "1rem" }}
-                          onClick={() => {
-                            onGetCommentList(item.id)
-                          }}
-                        >
-                         Show Comments
-                        </Button>
-                        <Button
-                          size={"sm"}
-                          style={{ marginRight: "1rem" }}
-                          onClick={() => {
-                            setRowData(item);
-                            setOpenModal(true);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          size={"sm"}
-                          onClick={() => {
-                            deleteNote(item.id, item.filePath);
-                          }}
-                        >
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
+                  <TableRowItem
+                  key={item.id}
+                  setRowData={setRowData}
+                  setOpenAddSimilarNote={setOpenAddSimilarNote}
+                  onGetCommentList={onGetCommentList}
+                  setOpenModal={setOpenModal} 
+                  deleteNote={deleteNote}
+                  item={item}
+                  openTimeLineHandler={openTimeLineHandler}
+                  />
                   ))}
                 </TableBody>
               </Table>
             </div>
-            <div className="w-full flex pl-10">
-              <TimeLine />
-            </div>
+            {
+              openTimeLine && (
+                <div className="w-full flex pl-10">
+                {
+                  comments?.length != 0 ? (
+                    <TimeLine data={comments}/>
+                  ) : (
+                    <div>Yorum bulunamadı.</div>
+                  )
+                }
+               </div>
+              )
+            }
+
           </div>
         </CardContent>
       </Card>
