@@ -39,10 +39,16 @@ function TableRowItem({
 
     const searchParams= useSearchParams();
     const id = searchParams.get("id");
+    const [mounted, setMounted] = useState(false);
 
 
+    useEffect(() => {
+      setMounted(true)
+    }, [])
 
-    console.log(openTimeLine, 'openTimeLine')
+    if(!mounted){
+      return null;
+    }
 
 
 
