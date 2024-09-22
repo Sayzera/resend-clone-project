@@ -30,8 +30,8 @@ const TimeLine = ({ data }: TimeLineProps) => {
     }
   >({});
   const changeStatus = async (id:string, status:boolean) => {
-    await changeStatusNoteLinkedToNote(id, status)
-    router.refresh()
+   const response =  await changeStatusNoteLinkedToNote(id, status)
+   return response
   }
   
 
@@ -43,6 +43,7 @@ const TimeLine = ({ data }: TimeLineProps) => {
       }))
     })
   }, [data])
+
 
 
   return (
@@ -65,12 +66,16 @@ const TimeLine = ({ data }: TimeLineProps) => {
             <div>
             <Checkbox
                 checked={timeItem[item.id]}
-               onCheckedChange={(e) => {
-                  changeStatus(item.id, e as boolean)
-                  setTimeItem((prev) =>({
-                    ...prev,
-                    [item.id]: e
-                  }))
+                onCheckedChange={async (e) => {
+                 const result =  await changeStatus(item.id, e as boolean)
+
+                  if(result?.status === 200) {
+                    setTimeItem((prev) =>({
+                      ...prev,
+                      [item.id]: e
+                    }))
+                  }
+                 
                }}
             />
 

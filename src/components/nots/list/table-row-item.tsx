@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { updateUrlParameter } from "@/lib/urlFunctions";
 import Image from "next/image";
 import { useParams,useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CiBoxList, CiEdit, CiSquarePlus } from "react-icons/ci";
 import { MdOutlineDelete } from "react-icons/md";
 
@@ -41,16 +42,11 @@ function TableRowItem({
 
 
 
-    function updateUrlParameter(param: string, value: string) {
-        // Mevcut URL'yi alın
-        const url = new URL(window.location.href);
+    console.log(openTimeLine, 'openTimeLine')
+
+
+
       
-        // Parametreyi güncelleyin veya ekleyin
-        url.searchParams.set(param, value);
-      
-        // Güncellenmiş URL'yi tarayıcıya yansıtın
-        window.history.pushState({}, '', url.toString());
-      }
   return (
     <TableRow key={item.id}>
       <TableCell className="font-medium">
@@ -86,9 +82,13 @@ function TableRowItem({
             updateUrlParameter("id", item.id);
 
             setOpenTimeLine(true);
-            openTimeLineHandler(true);
+            openTimeLineHandler(true);  
 
-          
+
+            /**
+             * State değiştiğinde anlık olarak bu satır etkilenmez bir sonraki tıklanmada 
+             * verinin değiştiğini görebiliriz 
+             */
             if(openTimeLine && id == item.id){
                 setOpenTimeLine(false);
                 openTimeLineHandler(false);
